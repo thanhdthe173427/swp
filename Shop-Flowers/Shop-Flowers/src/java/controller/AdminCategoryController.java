@@ -52,8 +52,7 @@ public class AdminCategoryController extends HttpServlet {
             String keySearch = search.toLowerCase();
             categories = categories.stream().filter(p ->
                 (p.getName() != null && p.getName().toLowerCase().contains(keySearch)) ||
-                (p.getDescription() != null && p.getDescription().toLowerCase().contains(keySearch)) ||
-                (p.getSlug()!= null && p.getSlug().toLowerCase().contains(keySearch))      
+                (p.getDescription() != null && p.getDescription().toLowerCase().contains(keySearch))    
             ).toList();
         }
         request.setAttribute("search", search);
@@ -79,11 +78,9 @@ public class AdminCategoryController extends HttpServlet {
         
         String name = request.getParameter("name");
         String description = request.getParameter("description").trim();
-        String slug = description.replace(" ", "-");
         Category c = new Category();
         c.setName(name);
         c.setDescription(description);
-        c.setSlug(slug);
         categoryDao.add(c);
         this.doGet(request, response);
     }
@@ -96,12 +93,11 @@ public class AdminCategoryController extends HttpServlet {
     protected void update(HttpServletRequest request, HttpServletResponse respone, Long id) throws ServletException, IOException {
         String name = request.getParameter("name");
         String description = request.getParameter("description").trim();
-        String slug = description.replace(" ", "-");
+
         
         Category c = categoryDao.getById(id);
         c.setName(name);
         c.setDescription(description);
-        c.setSlug(slug);
         if(c.getParentId() == null){
             c.setParentId(null);
         }
