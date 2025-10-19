@@ -155,7 +155,12 @@ public class UserDao extends DBContext {
         return null;
     }
 
-    /** ✅ Đăng nhập (email + password) */
+    /**
+     * 
+     * @param email
+     * @param password
+     * @return 
+     */
     public User getUserByEmailAndPassword(String email, String password) {
         String sql = "SELECT * FROM users WHERE email = ? AND password_hash = ?";
         try (Connection conn = getConnection();
@@ -171,11 +176,70 @@ public class UserDao extends DBContext {
             }
 
         } catch (SQLException e) {
-            System.err.println("❌ Lỗi getUserByEmailAndPassword(): " + e.getMessage());
+            System.err.println("Lỗi getUserByEmailAndPassword(): " + e.getMessage());
+            e.printStackTrace();
+        }
+        
+        return null;
+    }
+    
+    
+   
+    
+        /** ✅ Lưu token reset mật khẩu vào DB */
+    public void saveResetToken(String email, String token) {
+        String sql = "UPDATE users SET reset_token = ?, reset_time = NOW() WHERE email = ?";
+        try (Connection conn = getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, token);
+            ps.setString(2, email);
+            ps.executeUpdate();
+            System.out.println("✅ Đã lưu reset token cho " + email);
+
+        } catch (SQLException e) {
+            System.err.println("❌ Lỗi saveResetToken(): " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    /** ✅ Tìm user theo reset_token (để đặt lại mật khẩu mới) */
+    public User findByResetToken(String token) {
+        String sql = "SELECT * FROM users WHERE reset_token = ?";
+        try (Connection conn = getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, token);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return extractUser(rs);
+                }
+            }
+
+        } catch (SQLException e) {
+            System.err.println("❌ Lỗi findByResetToken(): " + e.getMessage());
             e.printStackTrace();
         }
         return null;
     }
+
+    /** ✅ Cập nhật mật khẩu mới & xóa token */
+    public void updatePasswordByToken(String token, String newPasswordHash) {
+        String sql = "UPDATE users SET password_hash = ?, reset_token = NULL, updated_at = NOW() WHERE reset_token = ?";
+        try (Connection conn = getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, newPasswordHash);
+            ps.setString(2, token);
+            ps.executeUpdate();
+            System.out.println("🔑 Cập nhật mật khẩu mới thành công!");
+
+        } catch (SQLException e) {
+            System.err.println("❌ Lỗi updatePasswordByToken(): " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
 
     /** 🧩 Hàm helper chuyển ResultSet → User model (có avatar) */
     private User extractUser(ResultSet rs) throws SQLException {

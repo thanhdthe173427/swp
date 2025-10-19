@@ -12,7 +12,7 @@ public class LoginServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        request.getRequestDispatcher("/login.jsp").forward(request, response);
+        request.getRequestDispatcher("/Common/login.jsp").forward(request, response);
     }
 
     @Override
@@ -29,19 +29,20 @@ public class LoginServlet extends HttpServlet {
         // Validate input
         if (username == null || username.trim().isEmpty()) {
             request.setAttribute("error", "Vui lòng nhập email hoặc tên đăng nhập!");
-            request.getRequestDispatcher("/login.jsp").forward(request, response);
+            request.getRequestDispatcher("/Common/login.jsp").forward(request, response);
             return;
         }
 
         if (password == null || password.trim().isEmpty()) {
             request.setAttribute("error", "Vui lòng nhập mật khẩu!");
-            request.getRequestDispatcher("/login.jsp").forward(request, response);
+            request.getRequestDispatcher("/Common/login.jsp").forward(request, response);
             return;
         }
 
         // ✅ Kết nối Database
         UserDao userDao = new UserDao();
         User user = userDao.getUserByEmailAndPassword(username, password);
+        System.out.println(user+ "hehe");
 
         if (user != null) {
             // ✅ Đăng nhập thành công
@@ -59,8 +60,8 @@ public class LoginServlet extends HttpServlet {
             response.sendRedirect(request.getContextPath()+ "/Homepage");
         } else {
             // ❌ Sai tài khoản/mật khẩu
-            request.setAttribute("error", "Tên đăng nhập hoặc mật khẩu không đúng!");
-            request.getRequestDispatcher("/login.jsp").forward(request, response);
+            request.setAttribute("error", "Tên đăng nhập hoặc mật khẩu không đúng meo meo!");
+            request.getRequestDispatcher("/Common/login.jsp").forward(request, response);
         }
     }
 }

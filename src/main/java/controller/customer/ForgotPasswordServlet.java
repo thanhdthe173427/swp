@@ -1,63 +1,66 @@
-package controller.customer;
+package controller.common;
 
+import dao.UserDao;  // ✅ Sửa lại đúng tên lớp thật
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import java.io.IOException;
+import jakarta.servlet.http.*;
+import jakarta.mail.MessagingException;
+import model.User;
+import utils.EmailUtil;
 
-@WebServlet(name = "ForgotPasswordServlet", urlPatterns = {"/forgot_password_submit"})
+import java.io.IOException;
+import java.util.UUID;
+
+@WebServlet(name = "ForgotPasswordServlet", urlPatterns = {"/ForgotPassword"})
 public class ForgotPasswordServlet extends HttpServlet {
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
-        
-        // 1. Lấy dữ liệu
-        String email = request.getParameter("email");
 
-        // 2. Danh sách email giả định (Thay thế bằng kết nối Database thực tế)
-        String[] validEmails = {"admin@gmail.com", "user1@example.com", "user2@example.com"};
-        boolean emailExists = false;
+        String email = req.getParameter("email");
+        if (email == null || email.isBlank()) {
+            req.setAttribute("error", "Vui lòng nhập địa chỉ email!");
+            req.getRequestDispatcher("/Common/forgot_password.jsp").forward(req, resp);
+            return;
+        }
 
-        for (String validEmail : validEmails) {
-            if (validEmail.equalsIgnoreCase(email)) {
-                emailExists = true;
-                break;
+        try {
+            // ✅ Đúng class name của bạn
+            UserDao dao = new UserDao();
+            User user = dao.findByEmail(email);
+
+            if (user == null) {
+                req.setAttribute("error", "Không tìm thấy tài khoản với email này.");
+                req.getRequestDispatcher("/Common/forgot_password.jsp").forward(req, resp);
+                return;
             }
+
+            // ✅ Tạo token reset mật khẩu
+            String token = UUID.randomUUID().toString();
+            dao.saveResetToken(email, token);
+
+            // ✅ Tạo link reset
+            String resetLink = req.getScheme() + "://" + req.getServerName() + ":" + req.getServerPort()
+                    + req.getContextPath() + "/ResetPassword?token=" + token;
+
+            String subject = "Đặt lại mật khẩu FlowerShop";
+            String html = "<h3>Xin chào " + user.getFullName() + "!</h3>"
+                    + "<p>Bạn vừa yêu cầu đặt lại mật khẩu cho tài khoản FlowerShop.</p>"
+                    + "<p>Nhấn vào liên kết dưới đây để tạo mật khẩu mới:</p>"
+                    + "<a href='" + resetLink + "' style='color:#e60073; font-weight:bold;'>Đặt lại mật khẩu</a>"
+                    + "<p>Nếu bạn không yêu cầu điều này, vui lòng bỏ qua email.</p>";
+
+            EmailUtil.send(email, subject, html);
+            req.setAttribute("msg", "Liên kết đặt lại mật khẩu đã được gửi tới email của bạn!");
+        } catch (MessagingException e) {
+            e.printStackTrace();
+            req.setAttribute("error", "Lỗi gửi email: " + e.getMessage());
+        } catch (Exception e) {
+            e.printStackTrace();
+            req.setAttribute("error", "Đã xảy ra lỗi hệ thống!");
         }
-        
-        // 3. Chuẩn bị dữ liệu để hiển thị trên trang kết quả
-        String resultTitle;
-        String resultMessage;
-        String messageType; // "success" hoặc "error"
 
-        if (emailExists) {
-            resultTitle = "Thành công!";
-            resultMessage = "Chúng tôi đã gửi liên kết đặt lại mật khẩu đến email: <b>" + email + "</b>. Vui lòng kiểm tra hộp thư của bạn.";
-            messageType = "success";
-        } else {
-            resultTitle = "Lỗi!";
-            resultMessage = "Email <b>" + email + "</b> không tồn tại trong hệ thống. Vui lòng thử lại.";
-            messageType = "error";
-        }
-
-        // 4. Đặt thuộc tính vào request để JSP hiển thị
-        request.setAttribute("resultTitle", resultTitle);
-        request.setAttribute("resultMessage", resultMessage);
-        request.setAttribute("messageType", messageType);
-        request.setAttribute("email", email); // Giữ lại email để hiển thị nếu cần
-
-        // 5. Chuyển tiếp (Forward) yêu cầu đến trang JSP kết quả
-        // Giả định bạn có một file JSP tên là forgot_result.jsp để hiển thị kết quả
-        request.getRequestDispatcher("/forgot_result.jsp").forward(request, response);
-    }
-
-    @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        // Chuyển hướng đến form quên mật khẩu ban đầu
-        response.sendRedirect("forgot_password.jsp");
+        req.getRequestDispatcher("/Common/forgot_password.jsp").forward(req, resp);
     }
 }

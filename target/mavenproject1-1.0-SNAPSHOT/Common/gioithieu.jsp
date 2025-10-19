@@ -216,105 +216,12 @@
             color: #e60073;
         }
 
-        /* ===== FOOTER ===== */
-        .footer {
-            background-color: #ffb6c1;
-            color: #8b0057;
-            padding: 30px 60px;
-            margin-top: 40px;
-            border-radius: 10px 10px 0 0;
-            box-shadow: 0 -2px 8px rgba(231, 84, 128, 0.4);
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-between;
-            gap: 20px;
-            font-size: 14px;
-        }
-
-        .footer-section h4 {
-            color: #e60073;
-            margin-top: 0;
-            margin-bottom: 15px;
-            font-size: 16px;
-            font-weight: 600;
-            border-bottom: 1px solid #ffcce0;
-            padding-bottom: 8px;
-        }
-
-        .footer-section a {
-            color: #6a004a;
-            text-decoration: none;
-            line-height: 1.6;
-            display: block;
-            margin-bottom: 8px;
-        }
-
-        .footer-section a:hover {
-            text-decoration: underline;
-            color: #e60073;
-        }
+        
     </style>
 </head>
 <body>
 
-<header>
-    <nav class="navbar">
-        <!-- 🌸 Logo có thể nhấn được -->
-        <a href="homepage.jsp" class="logo" style="text-decoration: none;">
-            🌸 <span>FlowerShop</span>
-        </a>
-
-        <ul class="menu">
-            <li><a href="homepage.jsp">Trang chủ </a></li>
-            <li><a href="homepage.jsp">Giới thiệu</a></li>
-            <li><a href="#">Sản phẩm</a></li>
-            <li><a href="#">Tin tức</a></li>
-            <li><a href="#">Video</a></li>
-            <li><a href="#">Liên hệ</a></li>
-            <li><a href="#">Bản đồ</a></li>
-            <li><a href="#">Giỏ hàng</a></li>
-            <li><a href="#">SĐT</a></li>
-        </ul>
-
-        <%
-    String user = (String) session.getAttribute("username");
-    String avatar = (String) session.getAttribute("avatar");
-%>
-
-<div class="auth-buttons">
-    <% if (user == null) { %>
-        <!-- 🌸 Nếu chưa đăng nhập -->
-        <a href="login.jsp">Đăng nhập</a>
-        <a href="register.jsp">Đăng ký</a>
-    <% } else { %>
-        <!-- 🌸 Nếu đã đăng nhập -->
-        <div style="display: flex; align-items: center; gap: 10px;">
-            <img src="<%= avatar %>" alt="Avatar"
-                 style="width: 36px; height: 36px; border-radius: 50%; border: 2px solid #e60073;">
-            <span style="color:#8b0057; font-weight:600;"><%= user %></span>
-            <a href="LogoutServlet" 
-               style="text-decoration:none; background-color:#e60073; color:white; padding:6px 14px; border-radius:6px;">
-                Đăng xuất
-            </a>
-        </div>
-    <% } %>
-</div>
-
-    </nav>
-    <hr class="divider">
-
-    <div class="submenu">
-        <ul>
-            <li><a href="#">Hoa bó</a></li>
-            <li><a href="#">Hoa sinh nhật</a></li>
-            <li><a href="#">Hoa chia buồn</a></li>
-            <li><a href="#">Hoa khai trương</a></li>
-            <li><a href="#">Hoa chúc mừng</a></li>
-            <li><a href="#">Hoa tình yêu</a></li>
-            <li><a href="#">Hoa tốt nghiệp</a></li>
-        </ul>
-    </div>
-</header>
+<jsp:include page="/Trang/header.jsp" />
 
 <div class="main-content-wrapper">
     <aside class="sidebar">
@@ -398,28 +305,8 @@
 
 </div>
 
-<footer class="footer">
-    <div class="footer-section">
-        <h4>Liên hệ</h4>
-        <p>Email: contact@flowershop.com</p>
-        <p>Địa chỉ: 123 Đường Hoa Hồng, TP. HCM</p>
-    </div>
-    <div class="footer-section">
-        <h4>Phản hồi</h4>
-        <a href="#">Gửi phản hồi</a>
-        <a href="#">Câu hỏi thường gặp</a>
-    </div>
-    <div class="footer-section">
-        <h4>Chính sách</h4>
-        <a href="#">Chính sách thanh toán</a>
-        <a href="#">Chính sách vận chuyển</a>
-        <a href="#">Chính sách đổi trả</a>
-    </div>
-    <div class="footer-section">
-        <h4>Mạng xã hội</h4>
-        <a href="#"><img src="https://img.icons8.com/ios-filled/20/8b0057/facebook-new.png" alt="Facebook"> Facebook</a>
-        <a href="#"><img src="https://img.icons8.com/ios-filled/20/8b0057/zalo.png" alt="Zalo"> Zalo</a>
-    </div>
+ <footer class="footer">
+    <jsp:include page="/Trang/footer.jsp" />
 </footer>
 
 </body>

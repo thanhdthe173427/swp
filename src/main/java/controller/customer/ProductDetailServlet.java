@@ -7,10 +7,10 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
 import java.io.IOException;
 
-
 @WebServlet(name = "ProductDetailServlet", urlPatterns = {"/product-detail"})
 public class ProductDetailServlet extends HttpServlet {
 
+    // ✅ Chỉ hiển thị thông tin sản phẩm
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -33,12 +33,20 @@ public class ProductDetailServlet extends HttpServlet {
             }
 
             request.setAttribute("product", product);
-
-            // ✅ Forward đúng đường dẫn tuyệt đối bên trong webapp/Common/
             request.getRequestDispatcher("/Common/product-detail.jsp").forward(request, response);
 
         } catch (NumberFormatException e) {
             response.sendRedirect("Homepage");
         }
+    }
+
+    // ❌ Không xử lý thêm giỏ hàng tại đây nữa
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
+        // Nếu ai đó gửi POST tới /product-detail (như form cũ),
+        // thì chuyển hướng luôn sang Cart servlet để xử lý.
+        response.sendRedirect(request.getContextPath() + "/Cart");
     }
 }

@@ -181,7 +181,7 @@
             <h2>Quên mật khẩu?</h2>
             <p>Nhập email của bạn để nhận liên kết đặt lại mật khẩu.</p>
 
-            <form action="homepage.jsp" method="post">
+            <form action="ForgotPassword" method="post">
                 <input type="email" name="email" placeholder="Nhập email của bạn" required>
                 <button type="submit">Gửi liên kết đặt lại</button>
             </form>
