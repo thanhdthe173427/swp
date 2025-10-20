@@ -81,6 +81,7 @@ public class AdminCategoryController extends HttpServlet {
         Category c = new Category();
         c.setName(name);
         c.setDescription(description);
+        c.setSlug(name);
         categoryDao.add(c);
         this.doGet(request, response);
     }
