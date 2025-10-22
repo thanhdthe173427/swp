@@ -1,42 +1,49 @@
-C:\Users\Acer\OneDrive - NVC\Máy tính\SWP\swp\src\main\java\controller\customer\ProductDetailServlet.java
-C:\Users\Acer\OneDrive - NVC\Máy tính\SWP\swp\src\main\java\model\Cart.java
-C:\Users\Acer\OneDrive - NVC\Máy tính\SWP\swp\src\main\java\model\Delivery.java
-C:\Users\Acer\OneDrive - NVC\Máy tính\SWP\swp\src\main\java\controller\customer\ChangePasswordServlet.java
-C:\Users\Acer\OneDrive - NVC\Máy tính\SWP\swp\src\main\java\controller\customer\LoginServlet.java
-C:\Users\Acer\OneDrive - NVC\Máy tính\SWP\swp\src\main\java\model\Product.java
-C:\Users\Acer\OneDrive - NVC\Máy tính\SWP\swp\src\main\java\com\mycompany\mavenproject1\JakartaRestConfiguration.java
-C:\Users\Acer\OneDrive - NVC\Máy tính\SWP\swp\src\main\java\controller\StaffManager\NewClass.java
-C:\Users\Acer\OneDrive - NVC\Máy tính\SWP\swp\src\main\java\model\Order.java
-C:\Users\Acer\OneDrive - NVC\Máy tính\SWP\swp\src\main\java\dao\UserDao.java
-C:\Users\Acer\OneDrive - NVC\Máy tính\SWP\swp\src\main\java\dao\AddressDAO.java
-C:\Users\Acer\OneDrive - NVC\Máy tính\SWP\swp\src\main\java\model\Warehouse.java
-C:\Users\Acer\OneDrive - NVC\Máy tính\SWP\swp\src\main\java\model\Address.java
-C:\Users\Acer\OneDrive - NVC\Máy tính\SWP\swp\src\main\java\model\Payment.java
-C:\Users\Acer\OneDrive - NVC\Máy tính\SWP\swp\src\main\java\controller\customer\ViewProfileServlet.java
-C:\Users\Acer\OneDrive - NVC\Máy tính\SWP\swp\src\main\java\model\Batch.java
-C:\Users\Acer\OneDrive - NVC\Máy tính\SWP\swp\src\main\java\dao\CartDao.java
-C:\Users\Acer\OneDrive - NVC\Máy tính\SWP\swp\src\main\java\controller\customer\ForgotPasswordServlet.java
-C:\Users\Acer\OneDrive - NVC\Máy tính\SWP\swp\src\main\java\controller\customer\RegisterServlet.java
-C:\Users\Acer\OneDrive - NVC\Máy tính\SWP\swp\src\main\java\controller\customer\LogoutServlet.java
-C:\Users\Acer\OneDrive - NVC\Máy tính\SWP\swp\src\main\java\controller\customer\WishlistServlet.java
-C:\Users\Acer\OneDrive - NVC\Máy tính\SWP\swp\src\main\java\controller\customer\CartServlet.java
-C:\Users\Acer\OneDrive - NVC\Máy tính\SWP\swp\src\main\java\model\Material.java
-C:\Users\Acer\OneDrive - NVC\Máy tính\SWP\swp\src\main\java\com\mycompany\mavenproject1\resources\JakartaEE10Resource.java
-C:\Users\Acer\OneDrive - NVC\Máy tính\SWP\swp\src\main\java\controller\customer\EditProfileServlet.java
-C:\Users\Acer\OneDrive - NVC\Máy tính\SWP\swp\src\main\java\model\Supplier.java
-C:\Users\Acer\OneDrive - NVC\Máy tính\SWP\swp\src\main\java\utils\EmailUtil.java
-C:\Users\Acer\OneDrive - NVC\Máy tính\SWP\swp\src\main\java\model\StockMovement.java
-C:\Users\Acer\OneDrive - NVC\Máy tính\SWP\swp\src\main\java\controller\Cashier\NewClass.java
-C:\Users\Acer\OneDrive - NVC\Máy tính\SWP\swp\src\main\java\model\WishlistItem.java
-C:\Users\Acer\OneDrive - NVC\Máy tính\SWP\swp\src\main\java\model\OrderItem.java
-C:\Users\Acer\OneDrive - NVC\Máy tính\SWP\swp\src\main\java\model\SupplierInvoice.java
-C:\Users\Acer\OneDrive - NVC\Máy tính\SWP\swp\src\main\java\dao\CustomerDAO.java
-C:\Users\Acer\OneDrive - NVC\Máy tính\SWP\swp\src\main\java\controller\customer\Homepage.java
-C:\Users\Acer\OneDrive - NVC\Máy tính\SWP\swp\src\main\java\dao\DBContext.java
-C:\Users\Acer\OneDrive - NVC\Máy tính\SWP\swp\src\main\java\model\Category.java
-C:\Users\Acer\OneDrive - NVC\Máy tính\SWP\swp\src\main\java\model\User.java
-C:\Users\Acer\OneDrive - NVC\Máy tính\SWP\swp\src\main\java\model\Voucher.java
-C:\Users\Acer\OneDrive - NVC\Máy tính\SWP\swp\src\main\java\dao\ProductDAO.java
-C:\Users\Acer\OneDrive - NVC\Máy tính\SWP\swp\src\main\java\dao\WishlistDao.java
-C:\Users\Acer\OneDrive - NVC\Máy tính\SWP\swp\src\main\java\controller\admin\NewClass.java
-C:\Users\Acer\OneDrive - NVC\Máy tính\SWP\swp\src\main\java\model\CartItem.java
+D:\swpchinh\src\main\java\controller\customer\ChangePasswordServlet.java
+D:\swpchinh\src\main\java\model\User.java
+D:\swpchinh\src\main\java\controller\customer\ViewProfileServlet.java
+D:\swpchinh\src\main\java\dao\AddressDAO.java
+D:\swpchinh\src\main\java\dao\WishlistDao.java
+D:\swpchinh\src\main\java\model\WishlistItem.java
+D:\swpchinh\src\main\java\model\Material.java
+D:\swpchinh\src\main\java\controller\StaffManager\NewClass.java
+D:\swpchinh\src\main\java\model\Delivery.java
+D:\swpchinh\src\main\java\model\Voucher.java
+D:\swpchinh\src\main\java\controller\Cashier\NewClass.java
+D:\swpchinh\src\main\java\controller\customer\LogoutServlet.java
+D:\swpchinh\src\main\java\dao\OrderItemDao.java
+D:\swpchinh\src\main\java\model\SupplierInvoice.java
+D:\swpchinh\src\main\java\utils\Config.java
+D:\swpchinh\src\main\java\model\Payment.java
+D:\swpchinh\src\main\java\controller\customer\CartServlet.java
+D:\swpchinh\src\main\java\controller\customer\EditProfileServlet.java
+D:\swpchinh\src\main\java\com\mycompany\mavenproject1\resources\JakartaEE10Resource.java
+D:\swpchinh\src\main\java\controller\customer\ConfirmOrderServlet.java
+D:\swpchinh\src\main\java\dao\ProductDAO.java
+D:\swpchinh\src\main\java\model\Cart.java
+D:\swpchinh\src\main\java\model\CartItem.java
+D:\swpchinh\src\main\java\controller\customer\ProductDetailServlet.java
+D:\swpchinh\src\main\java\controller\admin\NewClass.java
+D:\swpchinh\src\main\java\controller\customer\ForgotPasswordServlet.java
+D:\swpchinh\src\main\java\controller\customer\Homepage.java
+D:\swpchinh\src\main\java\dao\UserDao.java
+D:\swpchinh\src\main\java\com\mycompany\mavenproject1\JakartaRestConfiguration.java
+D:\swpchinh\src\main\java\dao\OrderDao.java
+D:\swpchinh\src\main\java\controller\customer\WishlistServlet.java
+D:\swpchinh\src\main\java\model\Order.java
+D:\swpchinh\src\main\java\dao\DBContext.java
+D:\swpchinh\src\main\java\model\Category.java
+D:\swpchinh\src\main\java\controller\customer\RegisterServlet.java
+D:\swpchinh\src\main\java\controller\customer\HandlePaymentResultServlet.java
+D:\swpchinh\src\main\java\model\Product.java
+D:\swpchinh\src\main\java\model\Warehouse.java
+D:\swpchinh\src\main\java\utils\EmailUtil.java
+D:\swpchinh\src\main\java\dao\CartDao.java
+D:\swpchinh\src\main\java\model\Supplier.java
+D:\swpchinh\src\main\java\model\Batch.java
+D:\swpchinh\src\main\java\model\OrderItem.java
+D:\swpchinh\src\main\java\dao\CustomerDAO.java
+D:\swpchinh\src\main\java\model\StockMovement.java
+D:\swpchinh\src\main\java\controller\customer\PaymentController.java
+D:\swpchinh\src\main\java\model\Address.java
+D:\swpchinh\src\main\java\controller\customer\LoginServlet.java
+D:\swpchinh\src\main\java\controller\customer\CheckoutServlet.java

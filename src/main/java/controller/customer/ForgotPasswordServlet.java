@@ -1,4 +1,4 @@
-package controller.common;
+package controller.customer;
 
 import dao.UserDao;  // ✅ Sửa lại đúng tên lớp thật
 import jakarta.servlet.ServletException;
