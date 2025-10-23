@@ -7,6 +7,7 @@
     <h3 style="color:#e60073;">🎉 Đặt hàng thành công!</h3>
 
     <%
+        // ✅ Lấy mã đơn hàng từ URL
         String orderCode = request.getParameter("orderCode");
         if (orderCode == null || orderCode.isEmpty()) {
     %>
@@ -26,6 +27,7 @@
             } else {
                 List<model.OrderItem> items = orderDao.getOrderItemsByOrderId(order.getId());
     %>
+
                 <p><strong>Mã đơn hàng:</strong> <%= order.getOrderCode() %></p>
                 <p><strong>Tên khách hàng:</strong> <%= order.getCustomerName() %></p>
                 <p><strong>Số điện thoại:</strong> <%= order.getCustomerPhone() %></p>
@@ -41,7 +43,7 @@
                     </tr>
                     <% for (model.OrderItem i : items) { %>
                     <tr>
-                        <td><%= i.getProductName() != null ? i.getProductName() : ("#"+i.getProductId()) %></td>
+                        <td><%= i.getProductName() != null ? i.getProductName() : ("#" + i.getProductId()) %></td>
                         <td><%= String.format("%,.0f", i.getUnitPrice()) %> đ</td>
                         <td><%= i.getQuantity() %></td>
                         <td><%= String.format("%,.0f", i.getTotalPrice()) %> đ</td>
@@ -55,12 +57,13 @@
                 </p>
 
                 <div style="text-align:center; margin-top:20px;">
-                    <p>💖 Cảm ơn bạn đã mua sắm tại <b>Shop Quà Tặng</b>!</p>
-                    <a href="<%= request.getContextPath() %>/Trang/index.jsp"
+                    <p>💖 Cảm ơn bạn đã mua sắm tại <b>FlowerShop</b>!</p>
+                    <a href="<%= request.getContextPath() %>/Homepage"
                        style="text-decoration:none; background-color:#e60073; color:white; padding:10px 18px; border-radius:6px;">
-                       🏠 Quay lại trang chủ
+                        🏠 Quay lại trang chủ
                     </a>
                 </div>
+
     <%
             }
         }

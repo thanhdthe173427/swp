@@ -163,12 +163,12 @@
 
 <header>
     <nav class="navbar">
-        <a href="<%= request.getContextPath() %>/Homepage" class="logo">
+        <a href="<%= request.getContextPath()%>/Homepage" class="logo">
             🌸 <span>FlowerShop</span>
         </a>
 
         <ul class="menu">
-            <li><a href="<%= request.getContextPath() %>/Homepage">Trang chủ</a></li>
+            <li><a href="<%= request.getContextPath()%>/Homepage">Trang chủ</a></li>
             <li><a href="#">Giới thiệu</a></li>
             <li><a href="#">Sản phẩm</a></li>
             <li><a href="#">Tin tức</a></li>
@@ -176,32 +176,33 @@
         </ul>
 
         <div class="auth-buttons">
-            <% if (user == null) { %>
-                <a href="<%= request.getContextPath() %>/Common/login.jsp">Đăng nhập</a>
-                <a href="<%= request.getContextPath() %>/Common/register.jsp">Đăng ký</a>
-            <% } else { %>
-                <img id="avatarBtn" src="<%= avatarUrl %>" alt="Avatar" class="avatar">
+            <% if (user == null) {%>
+            <a href="<%= request.getContextPath()%>/Common/login.jsp">Đăng nhập</a>
+            <a href="<%= request.getContextPath()%>/Common/register.jsp">Đăng ký</a>
+            <% } else {%>
+            <img id="avatarBtn" src="<%= avatarUrl%>" alt="Avatar" class="avatar">
 
-                <!-- Menu Dropdown -->
-                <div id="avatarMenu" class="avatar-menu">
-                    <a href="<%= request.getContextPath() %>/ViewProfile">👤 Thông tin cá nhân</a>
-                    <a href="<%= request.getContextPath() %>/Wishlist">💖 Sản phẩm yêu thích</a>
-                    <a href="<%= request.getContextPath() %>/Cart">🛒 Giỏ hàng</a>
-                    <a href="<%= request.getContextPath() %>/ChangePassword">🔒 Đổi mật khẩu</a>
-                </div>
+            <!-- Menu Dropdown -->
+            <div id="avatarMenu" class="avatar-menu">
+                <a href="<%= request.getContextPath()%>/ViewProfile">👤 Thông tin cá nhân</a>
+                <a href="<%= request.getContextPath()%>/Wishlist">💖 Sản phẩm yêu thích</a>
+                <a href="<%= request.getContextPath()%>/Cart">🛒 Giỏ hàng</a>
+                <a href="<%= request.getContextPath()%>/ChangePassword">🔒 Đổi mật khẩu</a>
+            </div>
 
-                <span style="color:#8b0057; font-weight:600;">
-                    <%= (user.getFullName() != null && !user.getFullName().isEmpty())
-                            ? user.getFullName()
-                            : user.getEmail() %>
-                </span>
+            <span style="color:#8b0057; font-weight:600; pointer-events:none; cursor:default; user-select:none;">
+                <%= (user.getFullName() != null && !user.getFullName().isEmpty())
+                        ? user.getFullName()
+                        : user.getEmail()%> 
+            </span>
 
-                <!-- ✅ Đăng xuất ra ngoài -->
-                <a href="<%= request.getContextPath() %>/Logout"
-                   style="background-color:#e60073; color:white; padding:6px 14px; border-radius:6px; text-decoration:none;">
-                    🚪 Đăng xuất
-                </a>
-            <% } %>
+
+            <!-- ✅ Đăng xuất ra ngoài -->
+            <a href="<%= request.getContextPath()%>/Logout"
+               style="background-color:#e60073; color:white; padding:6px 14px; border-radius:6px; text-decoration:none;">
+                🚪 Đăng xuất
+            </a>
+            <% }%>
         </div>
     </nav>
 
@@ -209,13 +210,13 @@
 
     <div class="submenu">
         <ul>
-            <li><a href="#">Hoa bó</a></li>
-            <li><a href="#">Hoa sinh nhật</a></li>
-            <li><a href="#">Hoa chia buồn</a></li>
-            <li><a href="#">Hoa khai trương</a></li>
-            <li><a href="#">Hoa chúc mừng</a></li>
-            <li><a href="#">Hoa tình yêu</a></li>
-            <li><a href="#">Hoa tốt nghiệp</a></li>
+            <li><a href="<%= request.getContextPath()%>/CategoryProduct?category=bouquet">Hoa bó</a></li>
+            <li><a href="<%= request.getContextPath()%>/CategoryProduct?category=birthday">Hoa sinh nhật</a></li>
+            <li><a href="<%= request.getContextPath()%>/CategoryProduct?category=funeral">Hoa chia buồn</a></li>
+            <li><a href="<%= request.getContextPath()%>/CategoryProduct?category=opening">Hoa khai trương</a></li>
+            <li><a href="<%= request.getContextPath()%>/CategoryProduct?category=congrats">Hoa chúc mừng</a></li>
+            <li><a href="<%= request.getContextPath()%>/CategoryProduct?category=love">Hoa tình yêu</a></li>
+            <li><a href="<%= request.getContextPath()%>/CategoryProduct?category=graduation">Hoa tốt nghiệp</a></li>
         </ul>
     </div>
 </header>
@@ -229,7 +230,7 @@
             avatarBtn.addEventListener("click", function (e) {
                 e.stopPropagation();
                 avatarMenu.style.display =
-                    avatarMenu.style.display === "flex" ? "none" : "flex";
+                        avatarMenu.style.display === "flex" ? "none" : "flex";
             });
         }
 

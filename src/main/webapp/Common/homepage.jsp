@@ -6,7 +6,6 @@
 <head>
     <meta charset="UTF-8">
     <title><%= request.getAttribute("pageTitle") != null ? request.getAttribute("pageTitle") : "Flower Shop - Trang Chủ" %></title>
-    <link rel="stylesheet" href="styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
     <style>
@@ -17,7 +16,6 @@
             padding: 0;
             color: #333;
         }
-
 
         /* AUTH BUTTONS */
         .auth-buttons {
@@ -128,6 +126,7 @@
             text-align: center;
         }
 
+        /* ===== PRODUCT GRID ===== */
         .product-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
@@ -142,17 +141,26 @@
             text-align: center;
             box-shadow: 0 2px 8px rgba(231, 84, 128, 0.1);
             transition: 0.2s;
+            background-color: #fff;
         }
         .product:hover {
             transform: translateY(-3px);
             box-shadow: 0 4px 15px rgba(231, 84, 128, 0.3);
         }
+
         .product img {
             width: 100%;
-            height: 220px;
+            height: 230px;
             object-fit: cover;
             border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(231, 84, 128, 0.15);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
+        .product img:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 15px rgba(231, 84, 128, 0.3);
+        }
+
         .product h4 {
             font-size: 15px;
             color: #8b0057;
@@ -170,37 +178,40 @@
             border-radius: 5px;
             text-decoration: none;
             font-size: 13px;
+            transition: 0.3s;
         }
         .buy-btn:hover {
             background-color: #cc0066;
+            transform: translateY(-2px);
         }
-
     </style>
 </head>
 <body>
 
-    <jsp:include page="/Trang/header.jsp" />
-
+<jsp:include page="/Trang/header.jsp" />
 
 <div class="main-content-wrapper">
     <jsp:include page="/Trang/lap3.jsp" />
-
 
     <main class="main-content">
         <h3 class="section-title">🌸 Sản phẩm nổi bật 🌸</h3>
 
         <div class="product-grid">
-          
-
             <%
                 List<Product> list = (List<Product>) request.getAttribute("productList");
                 if (list != null && !list.isEmpty()) {
                     for (Product p : list) {
             %>
                 <div class="product">
-                    <img src="<%= p.getUrl() %>" alt="<%= p.getName() %>">
+                    <img 
+                        src="<%= (p.getUrl() != null && !p.getUrl().trim().isEmpty()) 
+                                ? p.getUrl() 
+                                : request.getContextPath() + "/images/default-flower.jpg" %>" 
+                        alt="<%= p.getName() %>"
+                        onerror="this.onerror=null;this.src='<%= request.getContextPath() %>/images/default-flower.jpg';"
+                    />
                     <h4><%= p.getName() %></h4>
-                    <p class="price"><%= p.getBasePrice() %> đ</p>
+                    <p class="price"><%= String.format("%,.0f", p.getBasePrice()) %> đ</p>
                     <a href="product-detail?id=<%= p.getId() %>" class="buy-btn">Xem chi tiết</a>
                 </div>
             <%
@@ -213,11 +224,9 @@
     </main>
 </div>
 
-
- <footer class="footer">
+<footer class="footer">
     <jsp:include page="/Trang/footer.jsp" />
 </footer>
 
-        
 </body>
 </html>

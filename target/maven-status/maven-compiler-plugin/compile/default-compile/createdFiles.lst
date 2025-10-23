@@ -47,4 +47,5 @@ controller\customer\LoginServlet.class
 model\OrderItem.class
 controller\customer\EditProfileServlet.class
 utils\EmailUtil$1.class
+controller\customer\CategoryProductServlet.class
 controller\customer\CartServlet.class

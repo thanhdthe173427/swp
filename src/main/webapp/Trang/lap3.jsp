@@ -38,14 +38,17 @@
 </style>
 
 <aside class="sidebar">
+
     <h3>Danh mục sản phẩm</h3>
     <ul>
-        <li><a href="#">Hoa bó</a></li>
-        <li><a href="#">Hoa sinh nhật</a></li>
-        <li><a href="#">Hoa chia buồn</a></li>
-        <li><a href="#">Hoa khai trương</a></li>
-        <li><a href="#">Hoa chúc mừng</a></li>
-        <li><a href="#">Hoa tình yêu</a></li>
-        <li><a href="#">Hoa tốt nghiệp</a></li>
+        <li><a href="<%= request.getContextPath()%>/CategoryProduct?category=bouquet">Hoa bó</a></li>
+        <li><a href="<%= request.getContextPath()%>/CategoryProduct?category=birthday">Hoa sinh nhật</a></li>
+        <li><a href="<%= request.getContextPath()%>/CategoryProduct?category=funeral">Hoa chia buồn</a></li>
+        <li><a href="<%= request.getContextPath()%>/CategoryProduct?category=opening">Hoa khai trương</a></li>
+        <li><a href="<%= request.getContextPath()%>/CategoryProduct?category=congrats">Hoa chúc mừng</a></li>
+        <li><a href="<%= request.getContextPath()%>/CategoryProduct?category=love">Hoa tình yêu</a></li>
+        <li><a href="<%= request.getContextPath()%>/CategoryProduct?category=graduation">Hoa tốt nghiệp</a></li>
     </ul>
+
+</ul>
 </aside>

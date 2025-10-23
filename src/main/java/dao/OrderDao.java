@@ -174,6 +174,78 @@ public long createOrder(Order order, List<OrderItem> items) {
 
         return o;
     }
+    
+    // ✅ Lấy đơn hàng theo mã đơn hàng (dùng cho confirmOrder.jsp)
+public Order getOrderByCode(String orderCode) {
+    Order o = null;
+    String sql = "SELECT * FROM orders WHERE order_code = ?";
+
+    try {
+        conn = new DBContext().getConnection();
+        ps = conn.prepareStatement(sql);
+        ps.setString(1, orderCode);
+        rs = ps.executeQuery();
+
+        if (rs.next()) {
+            o = new Order();
+            o.setId(rs.getLong("id"));
+            o.setOrderCode(rs.getString("order_code"));
+            o.setUserId(rs.getLong("user_id"));
+            o.setCustomerName(rs.getString("customer_name"));
+            o.setCustomerPhone(rs.getString("customer_phone"));
+            o.setStatus(rs.getString("status"));
+            o.setPaymentStatus(rs.getString("payment_status"));
+            o.setSubtotal(rs.getBigDecimal("subtotal"));
+            o.setDiscountTotal(rs.getBigDecimal("discount_total"));
+            o.setShippingFee(rs.getBigDecimal("shipping_fee"));
+            o.setGrandTotal(rs.getBigDecimal("grand_total"));
+            o.setNote(rs.getString("note"));
+            o.setPlacedAt(rs.getTimestamp("placed_at"));
+        }
+
+    } catch (Exception e) {
+        e.printStackTrace();
+    } finally {
+        closeConnection();
+    }
+
+    return o;
+}
+
+
+// ✅ Lấy danh sách sản phẩm trong đơn hàng
+public List<OrderItem> getOrderItemsByOrderId(long orderId) {
+    List<OrderItem> list = new ArrayList<>();
+    String sql = "SELECT * FROM order_items WHERE order_id = ?";
+
+    try {
+        conn = new DBContext().getConnection();
+        ps = conn.prepareStatement(sql);
+        ps.setLong(1, orderId);
+        rs = ps.executeQuery();
+
+        while (rs.next()) {
+            OrderItem item = new OrderItem();
+            item.setId(rs.getLong("id"));
+            item.setOrderId(rs.getLong("order_id"));
+            item.setProductId(rs.getLong("product_id"));
+            item.setProductName(rs.getString("product_name"));
+            item.setQuantity(rs.getInt("quantity"));
+            item.setUnitPrice(rs.getBigDecimal("unit_price"));
+            item.setDiscount(rs.getBigDecimal("discount"));
+            item.setTotalPrice(rs.getBigDecimal("total_price"));
+            list.add(item);
+        }
+
+    } catch (Exception e) {
+        e.printStackTrace();
+    } finally {
+        closeConnection();
+    }
+
+    return list;
+}
+
 
     // ✅ Đóng kết nối an toàn
     private void closeConnection() {
