@@ -169,11 +169,12 @@
 
         <ul class="menu">
             <li><a href="<%= request.getContextPath()%>/Homepage">Trang chủ</a></li>
-            <li><a href="#">Giới thiệu</a></li>
-            <li><a href="#">Sản phẩm</a></li>
-            <li><a href="#">Tin tức</a></li>
-            <li><a href="#">Liên hệ</a></li>
+            <li><a href="<%= request.getContextPath()%>/Common/gioithieu.jsp">Giới thiệu</a></li>
+            <li><a href="<%= request.getContextPath()%>/Common/sanpham.jsp">Sản phẩm</a></li>
+            <li><a href="<%= request.getContextPath()%>/Common/tintuc.jsp">Tin tức</a></li>
+            <li><a href="<%= request.getContextPath()%>/Common/contact.jsp">Liên hệ</a></li>
         </ul>
+
 
         <div class="auth-buttons">
             <% if (user == null) {%>

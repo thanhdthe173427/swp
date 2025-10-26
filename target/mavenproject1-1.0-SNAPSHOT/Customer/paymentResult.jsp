@@ -25,6 +25,7 @@
         }
     %>
 
-    <a href="<%= request.getContextPath() %>/Customer/home.jsp">⬅️ Quay lại trang chủ</a>
+    <a href="<%= request.getContextPath() %>/Homepage">⬅️ Quay lại trang chủ</a>
+
 </body>
 </html>

@@ -1,8 +1,11 @@
 package controller.customer;
 
 import dao.OrderDao;
+import dao.CartDao;
 import model.User;
+import model.Cart;
 import utils.Config;
+import utils.EmailUtil;
 
 import java.io.IOException;
 import jakarta.servlet.ServletException;
@@ -10,10 +13,12 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import utils.EmailUtil;
 
 @WebServlet(name = "HandlePaymentResultServlet", urlPatterns = {"/handle-payment-result"})
 public class HandlePaymentResultServlet extends HttpServlet {
+
+    private final OrderDao orderDao = new OrderDao();
+    private final CartDao cartDao = new CartDao();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -28,22 +33,25 @@ public class HandlePaymentResultServlet extends HttpServlet {
         // ✅ Lấy mã trạng thái giao dịch từ VNPay
         String transactionStatus = request.getParameter("vnp_TransactionStatus");
 
+        // ✅ Lấy mã đơn hàng từ VNPay callback
+        String orderCode = request.getParameter("vnp_TxnRef");
+
         if ("00".equals(transactionStatus)) {
             isSuccess = true;
             message = "✅ Thanh toán VNPay thành công!";
 
             // ✅ Cập nhật trạng thái đơn hàng trong DB
-            new OrderDao().updateOrderStatus(Config.orderID, "Submitted");
+            orderDao.updateOrderStatus(Config.orderID, "Submitted");
 
-            // ✅ Gửi email xác nhận cho khách hàng
+            // ✅ Lấy thông tin user hiện tại
             User user = (User) request.getSession().getAttribute("user");
+
             if (user != null) {
                 double amount = 0;
                 try {
                     amount = Double.parseDouble(request.getParameter("vnp_Amount")) / 100;
                 } catch (NumberFormatException ignored) {}
 
-                String orderCode = request.getParameter("vnp_TxnRef");
                 String transactionNo = request.getParameter("vnp_TransactionNo");
 
                 // 📨 Gửi email xác nhận thanh toán
@@ -53,11 +61,20 @@ public class HandlePaymentResultServlet extends HttpServlet {
                         amount,
                         transactionNo
                 );
+
+                // 🧹 Sau khi thanh toán thành công → XÓA GIỎ HÀNG
+                Cart cart = cartDao.getCartByUserId(user.getId());
+                if (cart != null) {
+                    cartDao.clearCart(cart.getId());
+                }
+
+                // 🧽 Xóa giỏ hàng trong session (nếu có)
+                request.getSession().removeAttribute("selectedCart");
             }
 
         } else {
             message = "❌ Giao dịch không thành công! (Mã lỗi: " + transactionStatus + ")";
-            new OrderDao().updateOrderStatus(Config.orderID, "Wait for Pay");
+            orderDao.updateOrderStatus(Config.orderID, "Wait for Pay");
         }
 
         // ✅ Truyền dữ liệu sang JSP hiển thị

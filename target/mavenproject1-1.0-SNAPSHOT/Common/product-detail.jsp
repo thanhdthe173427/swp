@@ -4,16 +4,12 @@
 <%
     Product p = (Product) request.getAttribute("product");
     if (p == null) {
-        out.println("<h3 style='color:red;'>Không tìm thấy sản phẩm!</h3>");
+        out.println("<h3 style='color:red; text-align:center; margin-top:100px;'>Không tìm thấy sản phẩm!</h3>");
         return;
     }
 
     HttpSession sessionObj = request.getSession(false);
-    User user = null;
-    if (sessionObj != null) {
-        user = (User) sessionObj.getAttribute("user");
-    }
-
+    User user = sessionObj != null ? (User) sessionObj.getAttribute("user") : null;
     String successMsg = (String) request.getAttribute("successMsg");
 %>
 
@@ -21,75 +17,77 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <title><%= p.getName() %> - Flower Shop</title>
-    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <title><%= p.getName() %> - FlowerShop</title>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
 
     <style>
+        /* ====== RESET & BASE ====== */
+        * {
+            box-sizing: border-box;
+        }
+
         body {
             font-family: "Poppins", sans-serif;
-            background: linear-gradient(to right, #fff, #fff0f5);
+            background: linear-gradient(135deg, #fff0f5, #ffffff);
             margin: 0;
-            padding: 0;
             color: #333;
         }
 
+        /* ====== MAIN WRAPPER ====== */
         .main-content-wrapper {
             display: flex;
-            gap: 25px;
-            padding: 40px 60px;
+            gap: 30px;
+            padding: 40px 60px 80px;
+            flex-wrap: wrap;
         }
 
         .main-content {
             flex-grow: 1;
             background-color: #fff;
-            border-radius: 15px;
-            box-shadow: 0 4px 15px rgba(255, 182, 193, 0.3);
-            padding: 30px 40px;
+            border-radius: 18px;
+            box-shadow: 0 6px 25px rgba(255, 182, 193, 0.3);
+            padding: 40px 50px;
             border: 1px solid #ffcce0;
-        }
-
-        .success-message {
-            background-color: #e8ffe8;
-            color: #2b7a0b;
-            border: 1px solid #b6f2b6;
-            padding: 10px 15px;
-            border-radius: 6px;
-            margin-bottom: 15px;
-            font-weight: 500;
-            text-align: center;
-            animation: fadeIn 0.4s ease-in;
+            animation: fadeIn 0.6s ease-in-out;
         }
 
         @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(-10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        /* ===== PRODUCT DETAIL ===== */
+        /* ====== SUCCESS MESSAGE ====== */
+        .success-message {
+            background: #e9ffe9;
+            border: 1px solid #a5f1a5;
+            color: #1b7a1b;
+            padding: 10px 15px;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: 500;
+            margin-bottom: 20px;
+            animation: fadeIn 0.4s ease;
+        }
+
+        /* ====== PRODUCT DETAIL ====== */
         .product-detail {
             display: flex;
             flex-wrap: wrap;
-            gap: 30px;
+            gap: 40px;
             align-items: flex-start;
         }
 
         .image-section {
-            flex: 0 0 320px;
+            flex: 0 0 350px;
             text-align: center;
         }
 
         .image-section img {
-            width: 320px;
-            height: auto;
-            border-radius: 12px;
+            width: 100%;
+            max-width: 350px;
+            border-radius: 14px;
             border: 2px solid #ffd6e8;
-            box-shadow: 0 3px 10px rgba(231, 84, 128, 0.2);
+            box-shadow: 0 5px 15px rgba(231, 84, 128, 0.25);
             transition: transform 0.3s ease;
         }
 
@@ -97,15 +95,17 @@
             transform: scale(1.05);
         }
 
+        /* ====== INFO SECTION ====== */
         .info-section {
             flex: 1;
             min-width: 300px;
         }
 
         .info-section h2 {
+            font-size: 28px;
             color: #e60073;
-            font-size: 24px;
             margin-bottom: 10px;
+            font-family: "Dancing Script", cursive;
         }
 
         .info-section p {
@@ -120,70 +120,114 @@
         .price {
             color: #e60073;
             font-weight: bold;
+            font-size: 20px;
         }
 
+        /* ====== BUTTON GROUP ====== */
         .btn-group {
             display: flex;
-            gap: 12px;
-            margin-top: 15px;
+            gap: 14px;
+            margin-top: 25px;
             flex-wrap: wrap;
         }
 
         .btn {
-            background-color: #e60073;
+            background: linear-gradient(90deg, #e60073, #ff66a3);
             color: white;
-            padding: 10px 20px;
-            border-radius: 6px;
-            text-decoration: none;
+            padding: 10px 22px;
+            border-radius: 8px;
             border: none;
+            text-decoration: none;
             cursor: pointer;
+            font-size: 15px;
+            font-weight: 600;
             transition: 0.3s;
-            font-weight: 500;
+            box-shadow: 0 3px 8px rgba(230, 0, 115, 0.2);
         }
 
         .btn:hover {
-            background-color: #cc0066;
+            background: linear-gradient(90deg, #cc0066, #ff4081);
+            transform: translateY(-2px);
         }
 
         .buy-now {
-            background-color: #ff0066;
+            background: linear-gradient(90deg, #ff0066, #ff80aa);
         }
 
         .buy-now:hover {
-            background-color: #c20050;
+            background: linear-gradient(90deg, #d40058, #ff6699);
         }
 
+        /* ====== DESCRIPTION BOX ====== */
         .description-box {
-            margin-top: 20px;
+            margin-top: 25px;
+            padding-top: 20px;
             border-top: 1px solid #ffd6e8;
-            padding-top: 15px;
-            font-size: 14px;
-            line-height: 1.6;
+            line-height: 1.7;
+            font-size: 15px;
+        }
+
+        .description-box p {
+            color: #8b0057;
+            font-weight: 600;
+            margin-bottom: 8px;
         }
 
         .description-box ul {
             padding-left: 18px;
+            color: #555;
         }
 
         .description-box li {
             margin-bottom: 6px;
         }
 
+        /* ====== RESPONSIVE ====== */
+        @media (max-width: 900px) {
+            .main-content-wrapper {
+                flex-direction: column;
+                padding: 30px 20px;
+            }
+
+            .main-content {
+                padding: 25px 20px;
+            }
+
+            .product-detail {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .image-section img {
+                max-width: 280px;
+            }
+
+            .info-section h2 {
+                text-align: center;
+            }
+
+            .btn-group {
+                justify-content: center;
+            }
+        }
     </style>
 </head>
 
 <body>
+
     <jsp:include page="/Trang/header.jsp" />
 
     <div class="main-content-wrapper">
         <jsp:include page="/Trang/lap3.jsp" />
 
         <main class="main-content">
+
             <% if (successMsg != null) { %>
-            <div class="success-message"><%= successMsg %></div>
+                <div class="success-message"><%= successMsg %></div>
             <% } %>
 
             <div class="product-detail">
+                <!-- IMAGE SECTION -->
                 <div class="image-section">
                     <img src="<%= (p.getUrl() != null && !p.getUrl().isEmpty()) 
                             ? p.getUrl() 
@@ -192,21 +236,24 @@
                          onerror="this.onerror=null;this.src='<%= request.getContextPath() %>/images/default-flower.jpg';">
                 </div>
 
+                <!-- INFO SECTION -->
                 <div class="info-section">
                     <h2><%= p.getName() %></h2>
                     <p><strong>Mã sản phẩm:</strong> <%= p.getSku() %></p>
                     <p><strong>Giá:</strong> <span class="price"><%= String.format("%,.0f", p.getBasePrice()) %> đ</span></p>
                     <p><strong>Đơn vị:</strong> <%= p.getUnit() != null ? p.getUnit() : "Bó" %></p>
+
                     <div class="description-box">
-                        <p><strong>Mô tả:</strong></p>
+                        <p>Mô tả sản phẩm:</p>
                         <ul>
                             <li><%= p.getDescription() != null ? p.getDescription() : "Hiện chưa có mô tả chi tiết cho sản phẩm này." %></li>
                             <li>🎁 Quý khách được tặng kèm thiệp chúc mừng miễn phí.</li>
                             <li>🚚 Giao hàng nhanh trong ngày tại TP.HCM.</li>
-                            <li>💐 Hoa tươi mới 100%, cắm theo mẫu thực tế.</li>
+                            <li>💐 Hoa tươi 100%, cắm theo mẫu thực tế.</li>
                         </ul>
                     </div>
 
+                    <!-- BUTTONS -->
                     <div class="btn-group">
                         <!-- ⚡ Mua ngay -->
                         <form action="<%= request.getContextPath() %>/Cart" method="post">
@@ -241,12 +288,12 @@
     <jsp:include page="/Trang/footer.jsp" />
 
     <script>
-        // ✅ Ẩn thông báo sau 3s
+        // Ẩn thông báo sau 3s
         setTimeout(() => {
             const msg = document.querySelector('.success-message');
-            if (msg)
-                msg.style.display = 'none';
+            if (msg) msg.style.display = 'none';
         }, 3000);
     </script>
+
 </body>
 </html>

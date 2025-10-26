@@ -177,7 +177,9 @@ public class PaymentController extends HttpServlet {
             return;
         }
 
-        // 🚀 9️⃣ Thanh toán COD → chuyển sang trang xác nhận
-        response.sendRedirect(request.getContextPath() + "/Customer/confirmOrder.jsp?success=true&orderCode=" + order.getOrderCode());
+       // 🚀 9️⃣ Thanh toán COD → chuyển qua ConfirmOrderServlet
+response.sendRedirect(request.getContextPath() + "/ConfirmOrder?orderCode=" + order.getOrderCode());
+
+
     }
 }

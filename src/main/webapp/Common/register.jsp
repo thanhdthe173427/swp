@@ -4,236 +4,194 @@
 <head>
     <meta charset="UTF-8">
     <title>Đăng ký tài khoản - FlowerShop</title>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+
     <style>
-        /* ===== TOÀN TRANG ===== */
+        /* ===== RESET ===== */
+        * {
+            box-sizing: border-box;
+        }
+
         body {
-            font-family: "Segoe UI", sans-serif;
-            background: linear-gradient(to right, #ffe6f2, #fff);
-            margin: 0;
-            padding: 0;
-        }
-
-        /* ===== THANH MENU ===== */
-        .navbar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: #ffb6c1;
-            padding: 10px 60px;
-            box-shadow: 0 2px 8px rgba(231, 84, 128, 0.4);
             font-family: "Poppins", sans-serif;
-            border-radius: 0 0 10px 10px;
-        }
-
-        .logo {
-            font-size: 24px;
-            font-weight: bold;
-            color: #8b0057;
-        }
-
-        .logo span {
-            font-family: "Dancing Script", cursive;
-            font-size: 26px;
-            margin-left: 5px;
-        }
-
-        .menu {
-            list-style: none;
-            display: flex;
-            flex: 1;
-            justify-content: center;
-            gap: 20px;
+            background: linear-gradient(135deg, #fff0f5, #ffffff);
             margin: 0;
             padding: 0;
+            color: #333;
         }
 
-        .menu li {
-            display: inline;
-        }
-
-        .menu a {
-            text-decoration: none;
-            color: #4b0057;
-            font-size: 15px;
-            transition: 0.3s;
-            padding: 5px 8px;
-            border-radius: 6px;
-        }
-
-        .menu a:hover {
-            background-color: #ff99aa;
-            color: #8b0057;
-        }
-
-        /* ===== NÚT ĐĂNG NHẬP / ĐĂNG KÝ ===== */
-        .auth-buttons {
-            display: flex;
-            gap: 12px;
-        }
-
-        .auth-buttons a {
-            text-decoration: none;
-            background-color: #e60073;
-            color: white;
-            padding: 6px 14px;
-            border-radius: 6px;
-            font-size: 14px;
-            transition: 0.3s;
-            font-weight: 500;
-        }
-
-        .auth-buttons a:hover {
-            background-color: #cc0066;
-            transform: translateY(-1px);
-        }
-
-        .divider {
-            border: none;
-            border-top: 2px solid #e75480;
-            margin: 0;
-            width: 100%;
-        }
-
-        /* ===== FORM ĐĂNG KÝ ===== */
+        /* ===== FORM CONTAINER ===== */
         .register-container {
-            background: white;
-            padding: 40px 50px;
-            border-radius: 20px;
-            box-shadow: 0 8px 30px rgba(231, 84, 128, 0.2);
-            width: 400px;
-            text-align: center;
+            background: #fff;
+            width: 420px;
+            margin: 100px auto 80px;
+            padding: 45px 50px 50px;
+            border-radius: 18px;
+            box-shadow: 0 6px 25px rgba(230, 0, 115, 0.25);
             border: 1px solid #ffcce0;
-            margin: 70px auto;
+            animation: fadeIn 0.6s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         h2 {
             color: #e60073;
+            font-family: "Dancing Script", cursive;
+            font-size: 34px;
+            text-align: center;
             margin-bottom: 30px;
-            font-size: 28px;
-            font-weight: 700;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
         }
 
         label {
-            display: block;
-            text-align: left;
-            color: #666;
-            margin-bottom: 5px;
-            font-size: 14px;
             font-weight: 500;
+            font-size: 14px;
+            color: #555;
+            margin-bottom: 5px;
         }
 
         input[type="text"],
-        input[type="password"],
-        input[type="email"] {
+        input[type="email"],
+        input[type="password"] {
             width: 100%;
-            padding: 12px;
-            margin-bottom: 18px;
-            border: 1px solid #ffcce0;
+            padding: 12px 14px;
             border-radius: 10px;
-            outline: none;
-            transition: 0.3s;
+            border: 1px solid #ffcce0;
             font-size: 15px;
-            box-sizing: border-box;
+            transition: 0.3s;
         }
 
-        input[type="text"]:focus,
-        input[type="password"]:focus,
-        input[type="email"]:focus {
+        input:focus {
             border-color: #e60073;
             box-shadow: 0 0 8px rgba(230, 0, 115, 0.25);
+            outline: none;
         }
 
+        /* ===== BUTTON ===== */
         input[type="submit"] {
-            background-color: #e60073;
-            color: white;
+            background: linear-gradient(90deg, #e60073, #ff66a3);
             border: none;
-            padding: 14px 0;
-            width: 100%;
-            border-radius: 10px;
-            font-size: 17px;
+            color: white;
+            padding: 13px;
+            font-size: 16px;
             font-weight: 600;
-            cursor: pointer;
-            transition: 0.3s, transform 0.1s;
+            border-radius: 10px;
             margin-top: 10px;
+            cursor: pointer;
+            transition: 0.3s;
+            box-shadow: 0 4px 10px rgba(230, 0, 115, 0.2);
         }
 
         input[type="submit"]:hover {
-            background-color: #cc0066;
-            transform: translateY(-1px);
+            background: linear-gradient(90deg, #cc0066, #ff4081);
+            transform: translateY(-2px);
         }
 
+        /* ===== BACK LINK ===== */
         .back-link {
             display: block;
-            margin-top: 25px;
+            margin-top: 20px;
+            text-align: center;
             color: #e60073;
-            text-decoration: none;
             font-size: 15px;
-            font-weight: 500;
+            text-decoration: none;
+            transition: 0.3s;
         }
 
         .back-link:hover {
-            text-decoration: underline;
             color: #cc0066;
+            text-decoration: underline;
+        }
+
+        /* ===== FOOTER DECOR ===== */
+        .register-footer {
+            text-align: center;
+            margin-top: 25px;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .register-footer a {
+            color: #e60073;
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        .register-footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 500px) {
+            .register-container {
+                width: 90%;
+                margin: 60px auto;
+                padding: 30px;
+            }
+
+            h2 {
+                font-size: 28px;
+            }
         }
     </style>
 </head>
 <body>
 
-    <!-- 🌸 THANH MENU -->
-    <header>
-        <nav class="navbar">
-            <div class="logo">
-                🌸 <span>FlowerShop</span>
-            </div>
+    <jsp:include page="/Trang/header.jsp" />
 
-            <ul class="menu">
-                <li><a href="#">Giới thiệu</a></li>
-                <li><a href="#">Sản phẩm</a></li>
-                <li><a href="#">Tin tức</a></li>
-                <li><a href="#">Video</a></li>
-                <li><a href="#">Liên hệ</a></li>
-                <li><a href="#">Bản đồ</a></li>
-                <li><a href="#">Giỏ hàng</a></li>
-                <li><a href="#">SĐT</a></li>
-            </ul>
-
-            <!-- 🌼 Đăng nhập / Đăng ký -->
-            <div class="auth-buttons">
-                <a href="login.jsp">Đăng nhập</a>
-                <a href="register.jsp">Đăng ký</a>
-            </div>
-        </nav>
-        <hr class="divider">
-    </header>
-
-    <!-- 🌷 KHUNG FORM ĐĂNG KÝ -->
+    <!-- 🌸 FORM ĐĂNG KÝ -->
     <div class="register-container">
         <h2>Đăng ký tài khoản</h2>
+
+        <% if (request.getAttribute("error") != null) { %>
+            <p style="color:#e60073; background:#fff0f5; padding:10px; border-radius:8px; text-align:center;">
+                <%= request.getAttribute("error") %>
+            </p>
+        <% } %>
+
+        <% if (request.getAttribute("success") != null) { %>
+            <p style="color:#2b7a0b; background:#e8ffe8; padding:10px; border-radius:8px; text-align:center;">
+                <%= request.getAttribute("success") %>
+            </p>
+        <% } %>
+
         <form action="${pageContext.request.contextPath}/register" method="post">
-            <label>Email:</label>
-            <input type="email" name="email" required>
+            <label>Email</label>
+            <input type="email" name="email" placeholder="Nhập email của bạn" required>
 
-            <label>Tên đăng nhập:</label>
-            <input type="text" name="username" required>
+            <label>Tên đăng nhập</label>
+            <input type="text" name="username" placeholder="Nhập tên đăng nhập" required>
 
-            <label>Mật khẩu:</label>
-            <input type="password" name="password" required>
+            <label>Mật khẩu</label>
+            <input type="password" name="password" placeholder="Nhập mật khẩu" required>
 
-            <label>Họ và tên:</label>
-            <input type="text" name="fullname">
+            <label>Họ và tên</label>
+            <input type="text" name="fullname" placeholder="Nguyễn Văn A">
 
-            <label>Số điện thoại:</label>
-            <input type="text" name="phone">
+            <label>Số điện thoại</label>
+            <input type="text" name="phone" placeholder="090x xxx xxx">
 
-            <label>Địa chỉ:</label>
-            <input type="text" name="address">
+            <label>Địa chỉ</label>
+            <input type="text" name="address" placeholder="Số nhà, đường, quận, thành phố">
 
-            <input type="submit" value="Đăng ký">
+            <input type="submit" value="Đăng ký ngay">
         </form>
 
-        <a href="homepage.jsp" class="back-link">← Quay lại trang chủ</a>
+        <div class="register-footer">
+            Đã có tài khoản? <a href="login.jsp">Đăng nhập</a>
+        </div>
 
+        <a href="homepage.jsp" class="back-link">← Quay lại trang chủ</a>
     </div>
 
+    <jsp:include page="/Trang/footer.jsp" />
 </body>
 </html>
