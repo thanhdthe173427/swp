@@ -1,3 +1,4 @@
+model\Batch.class
 utils\EmailUtil.class
 dao\CustomerDAO.class
 model\Warehouse.class
@@ -7,6 +8,7 @@ com\mycompany\mavenproject1\resources\JakartaEE10Resource.class
 model\Address.class
 dao\OrderDao.class
 model\StockMovement.class
+model\Product.class
 model\Voucher.class
 dao\AddressDAO.class
 model\User.class
@@ -21,6 +23,7 @@ controller\customer\HandlePaymentResultServlet.class
 model\Category.class
 controller\customer\ChangePasswordServlet.class
 model\Material.class
+dao\ProductDAO.class
 model\CartItem.class
 controller\customer\ForgotPasswordServlet.class
 model\Supplier.class
@@ -30,6 +33,7 @@ controller\customer\PaymentController.class
 controller\customer\CheckoutServlet.class
 com\mycompany\mavenproject1\JakartaRestConfiguration.class
 controller\customer\ProductDetailServlet.class
+dao\CartDao.class
 dao\WishlistDao.class
 controller\Cashier\NewClass.class
 controller\customer\ConfirmOrderServlet.class
@@ -37,10 +41,13 @@ controller\customer\PurchaseHistoryServlet.class
 utils\Config.class
 model\WishlistItem.class
 controller\customer\ViewProfileServlet.class
+dao\DBContext.class
 model\Order.class
 model\SupplierInvoice.class
 controller\customer\LoginServlet.class
 model\OrderItem.class
+controller\common\RecommendServlet.class
 controller\customer\EditProfileServlet.class
 utils\EmailUtil$1.class
 controller\customer\CategoryProductServlet.class
+controller\customer\CartServlet.class

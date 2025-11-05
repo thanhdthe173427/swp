@@ -269,7 +269,7 @@
 
                     <div class="form-options">
                         <label><input type="checkbox" name="remember"> Ghi nhớ đăng nhập</label>
-                        <a href="forgot_password.jsp">Quên mật khẩu?</a>
+                        <a href="${pageContext.request.contextPath}/Common/forgot_password.jsp">Quên mật khẩu?</a>
                     </div>
 
                     <button type="submit" class="btn-login">Đăng Nhập</button>
@@ -279,7 +279,7 @@
 
 
                 <div class="register-link">
-                    Chưa có tài khoản? <a href="register.jsp">Đăng ký ngay</a>
+                    Chưa có tài khoản? <a href="${pageContext.request.contextPath}/Common/register.jsp">Đăng ký ngay</a>
                 </div>
 
                 <div class="back-home">

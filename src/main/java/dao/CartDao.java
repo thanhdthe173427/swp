@@ -55,21 +55,28 @@ public class CartDao extends DBContext {
     }
 
     // 🔹 Tạo giỏ hàng mới
-    public void insertCart(Cart cart) {
+    public boolean insertCart(Cart cart) {
         String sql = "INSERT INTO carts (user_id, created_at, updated_at) VALUES (?, NOW(), NOW())";
+
         try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
             ps.setLong(1, cart.getUserId());
-            ps.executeUpdate();
+            int rowsAffected = ps.executeUpdate(); // Kiểm tra số dòng bị ảnh hưởng
 
-            ResultSet rs = ps.getGeneratedKeys();
-            if (rs.next()) {
-                cart.setId(rs.getLong(1));
-                System.out.println("🛒 Tạo giỏ hàng mới ID = " + cart.getId());
+            if (rowsAffected > 0) {
+                ResultSet rs = ps.getGeneratedKeys();
+                if (rs.next()) {
+                    cart.setId(rs.getLong(1));  // Lấy ID giỏ hàng mới
+                    System.out.println("🛒 Tạo giỏ hàng mới ID = " + cart.getId());
+                    return true;  // Thành công
+                }
             }
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
+        return false;  // Không thành công (lỗi hoặc không tạo được giỏ hàng)
     }
 
     // 🔹 Thêm hoặc cập nhật sản phẩm trong giỏ
@@ -78,48 +85,59 @@ public class CartDao extends DBContext {
      * @param cartId
      * @param item
      */
-    public void addItemToCart(long cartId, CartItem item) {
-    String sql = "INSERT INTO cart_items "
-            + "(cart_id, product_id, quantity, unit_price, product_name, product_image, updated_at) "
-            + "VALUES (?, ?, ?, ?, ?, ?, NOW()) "
-            + "ON DUPLICATE KEY UPDATE "
-            + "quantity = quantity + VALUES(quantity), "
-            + "unit_price = VALUES(unit_price), "
-            + "product_name = VALUES(product_name), "
-            + "product_image = VALUES(product_image), "
-            + "updated_at = NOW();";
+    public boolean addItemToCart(long cartId, CartItem item) {
+        String sql = "INSERT INTO cart_items \n"
+                + "(cart_id, product_id, quantity, unit_price, product_name, product_image)\n"
+                + "VALUES (?, ?, ?, ?, ?,?)\n"
+                + "AS new_values\n"
+                + "ON DUPLICATE KEY UPDATE\n"
+                + "    cart_items.quantity = cart_items.quantity + new_values.quantity,\n"
+                + "    cart_items.unit_price = new_values.unit_price,\n"
+                + "    cart_items.product_name = new_values.product_name,\n"
+                + "    cart_items.product_image = new_values.product_image,\n"
+                + "    cart_items.updated_at = NOW();";
 
-    try (Connection conn = getConnection();
-         PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
 
-        // ✅ Bảo vệ dữ liệu null
-        if (item.getProductName() == null || item.getProductImage() == null) {
-            ProductDAO productDAO = new ProductDAO();
-            Product product = productDAO.getProductById(item.getProductId());
-            if (product != null) {
-                item.setProductName(product.getName());
-                item.setProductImage(product.getUrl());
+            // ✅ Bảo vệ dữ liệu null
+            if (item.getProductName() == null || item.getProductImage() == null) {
+                ProductDAO productDAO = new ProductDAO();
+                Product product = productDAO.getProductById(item.getProductId());
+                if (product != null) {
+                    item.setProductName(product.getName());
+                    item.setProductImage(product.getUrl());
+                } else {
+                    // Nếu không tìm thấy sản phẩm trong DB, trả về false
+                    System.err.println("❌ Không tìm thấy sản phẩm với ID: " + item.getProductId());
+                    return false;
+                }
             }
+
+            // Gán giá trị vào PreparedStatement
+            ps.setLong(1, cartId);
+            ps.setLong(2, item.getProductId());
+            ps.setInt(3, item.getQuantity());
+            ps.setBigDecimal(4, item.getUnitPrice());
+            ps.setString(5, item.getProductName());
+            ps.setString(6, item.getProductImage());
+
+            int rows = ps.executeUpdate();
+
+            if (rows > 0) {
+                System.out.println("✅ Thêm/cập nhật giỏ hàng thành công (" + rows + " dòng)");
+                // Chỉ tính lại tổng nếu thêm/sửa thành công
+                recalculateCartTotals(cartId);
+                return true;
+            } else {
+                System.err.println("❌ Không có dòng nào bị ảnh hưởng.");
+                return false;
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
         }
-
-        ps.setLong(1, cartId);
-        ps.setLong(2, item.getProductId());
-        ps.setInt(3, item.getQuantity());
-        ps.setBigDecimal(4, item.getUnitPrice());
-        ps.setString(5, item.getProductName());
-        ps.setString(6, item.getProductImage());
-
-        int rows = ps.executeUpdate();
-        System.out.println("✅ Thêm/cập nhật giỏ hàng (" + rows + " dòng)");
-
-        // ⚡ Chỉ tính lại tổng nếu cần
-        recalculateCartTotals(cartId);
-
-    } catch (SQLException e) {
-        e.printStackTrace();
     }
-}
-
 
     // 🔹 Xóa toàn bộ item trong giỏ (nếu cần reset)
     public void clearCart(long cartId) {
@@ -133,70 +151,65 @@ public class CartDao extends DBContext {
             e.printStackTrace();
         }
     }
-    
+
     // 🟢 Tăng / giảm số lượng
-public void updateItemQuantity(long cartId, long productId, int delta) {
-    String sql = "UPDATE cart_items " +
-                 "SET quantity = quantity + ? " +
-                 "WHERE cart_id = ? AND product_id = ? AND quantity + ? > 0";
+    public void updateItemQuantity(long cartId, long productId, int delta) {
+        String sql = "UPDATE cart_items "
+                + "SET quantity = quantity + ? "
+                + "WHERE cart_id = ? AND product_id = ? AND quantity + ? > 0";
 
-    try (Connection conn = getConnection();
-         PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
 
-        ps.setInt(1, delta);
-        ps.setLong(2, cartId);
-        ps.setLong(3, productId);
-        ps.setInt(4, delta);
-        ps.executeUpdate();
+            ps.setInt(1, delta);
+            ps.setLong(2, cartId);
+            ps.setLong(3, productId);
+            ps.setInt(4, delta);
+            ps.executeUpdate();
 
-        recalculateCartTotals(cartId);
-        System.out.println("✅ Cập nhật số lượng sản phẩm thành công!");
+            recalculateCartTotals(cartId);
+            System.out.println("✅ Cập nhật số lượng sản phẩm thành công!");
 
-    } catch (SQLException e) {
-        e.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
-}
 
 // ❌ Xóa sản phẩm khỏi giỏ hàng
-public void removeItem(long cartId, long productId) {
-    String sql = "DELETE FROM cart_items WHERE cart_id = ? AND product_id = ?";
-    try (Connection conn = getConnection();
-         PreparedStatement ps = conn.prepareStatement(sql)) {
+    public void removeItem(long cartId, long productId) {
+        String sql = "DELETE FROM cart_items WHERE cart_id = ? AND product_id = ?";
+        try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
 
-        ps.setLong(1, cartId);
-        ps.setLong(2, productId);
-        ps.executeUpdate();
+            ps.setLong(1, cartId);
+            ps.setLong(2, productId);
+            ps.executeUpdate();
 
-        recalculateCartTotals(cartId);
-        System.out.println("🗑️ Đã xóa sản phẩm khỏi giỏ hàng.");
+            recalculateCartTotals(cartId);
+            System.out.println("🗑️ Đã xóa sản phẩm khỏi giỏ hàng.");
 
-    } catch (SQLException e) {
-        e.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
-}
 
 // 🔁 Tính lại tổng tiền giỏ hàng
-public void recalculateCartTotals(long cartId) {
-    String sql = "UPDATE carts c JOIN ( " +
-             "SELECT cart_id, SUM(quantity) AS total_items, " +
-             "SUM(quantity * unit_price) AS total_amount " +
-             "FROM cart_items WHERE cart_id = ? GROUP BY cart_id " +
-             ") t ON c.id = t.cart_id " +
-             "SET c.total_items = t.total_items, " +
-             "c.total_amount = t.total_amount, c.updated_at = NOW()";
+    public void recalculateCartTotals(long cartId) {
+        String sql = "UPDATE carts c JOIN ( "
+                + "SELECT cart_id, SUM(quantity) AS total_items, "
+                + "SUM(quantity * unit_price) AS total_amount "
+                + "FROM cart_items WHERE cart_id = ? GROUP BY cart_id "
+                + ") t ON c.id = t.cart_id "
+                + "SET c.total_items = t.total_items, "
+                + "c.total_amount = t.total_amount, c.updated_at = NOW()";
 
+        try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
 
-    try (Connection conn = getConnection();
-         PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setLong(1, cartId);
+            ps.executeUpdate();
 
-        ps.setLong(1, cartId);
-        ps.executeUpdate();
-
-    } catch (SQLException e) {
-        e.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
-}
-
 
     // 🔹 Test thủ công
     public static void main(String[] args) {

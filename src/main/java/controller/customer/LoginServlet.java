@@ -5,6 +5,7 @@ import model.User;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.*;
 import java.io.IOException;
+import java.util.List;
 
 
 public class LoginServlet extends HttpServlet {
@@ -41,8 +42,9 @@ public class LoginServlet extends HttpServlet {
 
         // ✅ Kết nối Database
         UserDao userDao = new UserDao();
+   
         User user = userDao.getUserByEmailAndPassword(username, password);
-        System.out.println(user+ "hehe");
+        System.out.println(user +  "hehe");
 
         if (user != null) {
             // ✅ Đăng nhập thành công
@@ -60,7 +62,7 @@ public class LoginServlet extends HttpServlet {
             response.sendRedirect(request.getContextPath()+ "/Homepage");
         } else {
             // ❌ Sai tài khoản/mật khẩu
-            request.setAttribute("error", "Tên đăng nhập hoặc mật khẩu không đúng meo meo!");
+            request.setAttribute("error", "Tên đăng nhập hoặc mật khẩu không đúng !");
             request.getRequestDispatcher("/Common/login.jsp").forward(request, response);
         }
     }

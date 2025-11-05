@@ -167,49 +167,50 @@
             🌸 <span>FlowerShop</span>
         </a>
 
+        <!-- ===== MAIN MENU ===== -->
         <ul class="menu">
             <li><a href="<%= request.getContextPath()%>/Homepage">Trang chủ</a></li>
             <li><a href="<%= request.getContextPath()%>/Common/gioithieu.jsp">Giới thiệu</a></li>
             <li><a href="<%= request.getContextPath()%>/Common/sanpham.jsp">Sản phẩm</a></li>
+            <li><a href="<%= request.getContextPath()%>/Customer/recommend.jsp">🎁 Gợi ý theo dịp</a></li> <!-- ✅ Mục mới -->
             <li><a href="<%= request.getContextPath()%>/Common/tintuc.jsp">Tin tức</a></li>
             <li><a href="<%= request.getContextPath()%>/Common/contact.jsp">Liên hệ</a></li>
         </ul>
 
-
+        <!-- ===== USER ACCOUNT SECTION ===== -->
         <div class="auth-buttons">
-            <% if (user == null) {%>
-            <a href="<%= request.getContextPath()%>/Common/login.jsp">Đăng nhập</a>
-            <a href="<%= request.getContextPath()%>/Common/register.jsp">Đăng ký</a>
-            <% } else {%>
-            <img id="avatarBtn" src="<%= avatarUrl%>" alt="Avatar" class="avatar">
+            <% if (user == null) { %>
+                <a href="<%= request.getContextPath()%>/Common/login.jsp">Đăng nhập</a>
+                <a href="<%= request.getContextPath()%>/Common/register.jsp">Đăng ký</a>
+            <% } else { %>
+                <img id="avatarBtn" src="<%= avatarUrl %>" alt="Avatar" class="avatar">
 
-            <!-- Menu Dropdown -->
-            <!-- Menu Dropdown -->
-            <div id="avatarMenu" class="avatar-menu">
-                <a href="<%= request.getContextPath()%>/ViewProfile">👤 Thông tin cá nhân</a>
-                <a href="<%= request.getContextPath()%>/Wishlist">💖 Sản phẩm yêu thích</a>
-                <a href="<%= request.getContextPath()%>/Cart">🛒 Giỏ hàng</a>
-                <a href="<%= request.getContextPath()%>/PurchaseHistory">🧾 Lịch sử mua hàng</a> <!-- ✅ Mới thêm -->
-                <a href="<%= request.getContextPath()%>/ChangePassword">🔒 Đổi mật khẩu</a>
-            </div>
-            <span style="color:#8b0057; font-weight:600; pointer-events:none; cursor:default; user-select:none;">
-                <%= (user.getFullName() != null && !user.getFullName().isEmpty())
-                        ? user.getFullName()
-                        : user.getEmail()%> 
-            </span>
+                <!-- ===== Avatar Dropdown Menu ===== -->
+                <div id="avatarMenu" class="avatar-menu">
+                    <a href="<%= request.getContextPath()%>/ViewProfile">👤 Thông tin cá nhân</a>
+                    <a href="<%= request.getContextPath()%>/Wishlist">💖 Sản phẩm yêu thích</a>
+                    <a href="<%= request.getContextPath()%>/Cart">🛒 Giỏ hàng</a>
+                    <a href="<%= request.getContextPath()%>/PurchaseHistory">🧾 Lịch sử mua hàng</a>
+                    <a href="<%= request.getContextPath()%>/ChangePassword">🔒 Đổi mật khẩu</a>
+                </div>
 
+                <span style="color:#8b0057; font-weight:600; pointer-events:none;">
+                    <%= (user.getFullName() != null && !user.getFullName().isEmpty())
+                            ? user.getFullName()
+                            : user.getEmail() %>
+                </span>
 
-            <!-- ✅ Đăng xuất ra ngoài -->
-            <a href="<%= request.getContextPath()%>/Logout"
-               style="background-color:#e60073; color:white; padding:6px 14px; border-radius:6px; text-decoration:none;">
-                🚪 Đăng xuất
-            </a>
-            <% }%>
+                <a href="<%= request.getContextPath()%>/Logout"
+                   style="background-color:#e60073; color:white; padding:6px 14px; border-radius:6px; text-decoration:none;">
+                    🚪 Đăng xuất
+                </a>
+            <% } %>
         </div>
     </nav>
 
     <hr class="divider">
 
+    <!-- ===== CATEGORY SUBMENU ===== -->
     <div class="submenu">
         <ul>
             <li><a href="<%= request.getContextPath()%>/CategoryProduct?category=bouquet">Hoa bó</a></li>
@@ -223,6 +224,7 @@
     </div>
 </header>
 
+<!-- ===== SCRIPT FOR DROPDOWN MENU ===== -->
 <script>
     document.addEventListener("DOMContentLoaded", function () {
         const avatarBtn = document.getElementById("avatarBtn");
@@ -232,7 +234,7 @@
             avatarBtn.addEventListener("click", function (e) {
                 e.stopPropagation();
                 avatarMenu.style.display =
-                        avatarMenu.style.display === "flex" ? "none" : "flex";
+                    avatarMenu.style.display === "flex" ? "none" : "flex";
             });
         }
 

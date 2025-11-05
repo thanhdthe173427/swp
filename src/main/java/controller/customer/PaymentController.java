@@ -37,7 +37,8 @@ public class PaymentController extends HttpServlet {
             for (String idStr : selectedIds.split(",")) {
                 try {
                     selectedIdsList.add(Long.parseLong(idStr.trim()));
-                } catch (NumberFormatException ignored) {}
+                } catch (NumberFormatException ignored) {
+                }
             }
         }
 
@@ -59,7 +60,9 @@ public class PaymentController extends HttpServlet {
 
         // 🔹 4️⃣ Phương thức thanh toán
         String method = request.getParameter("paymentMethod");
-        if (method == null || method.isEmpty()) method = "COD";
+        if (method == null || method.isEmpty()) {
+            method = "COD";
+        }
 
         // 🧺 5️⃣ Lấy giỏ hàng người dùng
         CartDao cartDao = new CartDao();
@@ -177,9 +180,15 @@ public class PaymentController extends HttpServlet {
             return;
         }
 
-       // 🚀 9️⃣ Thanh toán COD → chuyển qua ConfirmOrderServlet
-response.sendRedirect(request.getContextPath() + "/ConfirmOrder?orderCode=" + order.getOrderCode());
+        // ✅ Lưu ID đơn hàng để xử lý sau trong Config (VD: khi VNPay trả kết quả)
+        Config.orderID = (int) orderId;
+        System.out.println("✅ Đã tạo đơn hàng ID = " + orderId + ", lưu vào Config.orderID");
 
+// ✅ Lưu danh sách sản phẩm đã chọn vào session (để xử lý sau khi thanh toán thành công)
+        request.getSession().setAttribute("selectedItems", selectedIds);
+
+        // 🚀 9️⃣ Thanh toán COD → chuyển qua ConfirmOrderServlet
+        response.sendRedirect(request.getContextPath() + "/ConfirmOrder?orderCode=" + order.getOrderCode());
 
     }
 }

@@ -38,6 +38,7 @@ D:\swpchinh\src\main\java\controller\customer\RegisterServlet.java
 D:\swpchinh\src\main\java\controller\customer\HandlePaymentResultServlet.java
 D:\swpchinh\src\main\java\model\Product.java
 D:\swpchinh\src\main\java\model\Warehouse.java
+D:\swpchinh\src\main\java\controller\common\RecommendServlet.java
 D:\swpchinh\src\main\java\utils\EmailUtil.java
 D:\swpchinh\src\main\java\dao\CartDao.java
 D:\swpchinh\src\main\java\model\Supplier.java

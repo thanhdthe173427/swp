@@ -49,9 +49,21 @@ public class ConfirmOrderServlet extends HttpServlet {
         }
 
         // 🧹 Xóa giỏ hàng của người dùng sau khi đặt
-        Cart cart = cartDao.getCartByUserId(user.getId());
-        if (cart != null) {
-            cartDao.clearCart(cart.getId());
+        // 🧹 Sau khi thanh toán thành công → chỉ xóa sản phẩm được chọn
+   
+        String selectedItems = (String) session.getAttribute("selectedItems");
+
+        if (selectedItems != null && !selectedItems.isEmpty()) {
+            CartDao cartDao = new CartDao();
+            Cart cart = cartDao.getCartByUserId(user.getId());
+
+            for (String pid : selectedItems.split(",")) {
+                cartDao.removeItem(cart.getId(), Long.parseLong(pid));
+            }
+
+            // ✅ Xóa khỏi session để không bị xóa lần nữa
+            session.removeAttribute("selectedItems");
+            System.out.println("🧹 Đã xóa các sản phẩm đã thanh toán (COD) khỏi giỏ hàng.");
         }
 
         // 🪄 Xoá giỏ trong session (nếu có)

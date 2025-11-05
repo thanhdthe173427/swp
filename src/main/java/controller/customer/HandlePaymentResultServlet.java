@@ -13,6 +13,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 @WebServlet(name = "HandlePaymentResultServlet", urlPatterns = {"/handle-payment-result"})
 public class HandlePaymentResultServlet extends HttpServlet {
@@ -50,7 +51,8 @@ public class HandlePaymentResultServlet extends HttpServlet {
                 double amount = 0;
                 try {
                     amount = Double.parseDouble(request.getParameter("vnp_Amount")) / 100;
-                } catch (NumberFormatException ignored) {}
+                } catch (NumberFormatException ignored) {
+                }
 
                 String transactionNo = request.getParameter("vnp_TransactionNo");
 
@@ -62,10 +64,21 @@ public class HandlePaymentResultServlet extends HttpServlet {
                         transactionNo
                 );
 
-                // 🧹 Sau khi thanh toán thành công → XÓA GIỎ HÀNG
-                Cart cart = cartDao.getCartByUserId(user.getId());
-                if (cart != null) {
-                    cartDao.clearCart(cart.getId());
+                // 🧹 Sau khi thanh toán thành công → chỉ xóa sản phẩm được chọn
+                HttpSession session = request.getSession();
+                String selectedItems = (String) session.getAttribute("selectedItems");
+
+                if (selectedItems != null && !selectedItems.isEmpty()) {
+                    CartDao cartDao = new CartDao();
+                    Cart cart = cartDao.getCartByUserId(user.getId());
+
+                    for (String pid : selectedItems.split(",")) {
+                        cartDao.removeItem(cart.getId(), Long.parseLong(pid));
+                    }
+
+                    // ✅ Xóa khỏi session để không bị xóa lần nữa
+                    session.removeAttribute("selectedItems");
+                    System.out.println("🧹 Đã xóa các sản phẩm đã thanh toán (COD) khỏi giỏ hàng.");
                 }
 
                 // 🧽 Xóa giỏ hàng trong session (nếu có)
