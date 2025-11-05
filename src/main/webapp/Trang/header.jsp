@@ -184,13 +184,14 @@
             <img id="avatarBtn" src="<%= avatarUrl%>" alt="Avatar" class="avatar">
 
             <!-- Menu Dropdown -->
+            <!-- Menu Dropdown -->
             <div id="avatarMenu" class="avatar-menu">
                 <a href="<%= request.getContextPath()%>/ViewProfile">👤 Thông tin cá nhân</a>
                 <a href="<%= request.getContextPath()%>/Wishlist">💖 Sản phẩm yêu thích</a>
                 <a href="<%= request.getContextPath()%>/Cart">🛒 Giỏ hàng</a>
+                <a href="<%= request.getContextPath()%>/PurchaseHistory">🧾 Lịch sử mua hàng</a> <!-- ✅ Mới thêm -->
                 <a href="<%= request.getContextPath()%>/ChangePassword">🔒 Đổi mật khẩu</a>
             </div>
-
             <span style="color:#8b0057; font-weight:600; pointer-events:none; cursor:default; user-select:none;">
                 <%= (user.getFullName() != null && !user.getFullName().isEmpty())
                         ? user.getFullName()

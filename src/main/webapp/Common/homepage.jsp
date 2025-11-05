@@ -198,7 +198,7 @@
     <main class="main-content">
         <h3 class="section-title">🌸 Sản phẩm nổi bật 🌸</h3>
 
-        <div class="product-grid">
+        <div class="product-grid"> 
             <%
                 List<Product> list = (List<Product>) request.getAttribute("productList");
                 if (list != null && !list.isEmpty()) {

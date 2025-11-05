@@ -11,44 +11,54 @@ import java.util.ArrayList;
 import java.util.List;
 
 import dao.CartDao;
+import dao.CustomerDAO;
+import dao.AddressDAO;
 import model.Cart;
 import model.CartItem;
 import model.User;
+import model.Address;
 
 /**
  * Servlet điều hướng đến trang thanh toán (checkout.jsp)
  * Kiểm tra giỏ hàng trước khi tiến hành thanh toán.
- * Chỉ hiển thị các sản phẩm được chọn từ giỏ hàng.
+ * Tự động hiển thị thông tin người nhận (tên, SĐT, địa chỉ mặc định).
  */
 @WebServlet(name = "CheckoutServlet", urlPatterns = {"/Checkout"})
 public class CheckoutServlet extends HttpServlet {
 
     private final CartDao cartDao = new CartDao();
+    private final CustomerDAO customerDao = new CustomerDAO();
+    private final AddressDAO addressDao = new AddressDAO();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
+
+        request.setCharacterEncoding("UTF-8");
+        response.setCharacterEncoding("UTF-8");
+
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute("user");
 
+        // 🔒 Nếu chưa đăng nhập → chuyển hướng đến trang đăng nhập
         if (user == null) {
             response.sendRedirect(request.getContextPath() + "/Common/login.jsp");
             return;
         }
 
-        // 🔹 Lấy giỏ hàng người dùng
+        // 🩷 Lấy thông tin khách hàng (User) và địa chỉ mặc định
+        User customer = customerDao.getCustomerByUserId(user.getId());
+        Address defaultAddress = addressDao.getDefaultAddressByUserId(user.getId());
+
+        // 🛒 Lấy giỏ hàng của người dùng
         Cart cart = cartDao.getCartByUserId(user.getId());
-
-
         if (cart == null || cart.getItems() == null || cart.getItems().isEmpty()) {
-            // Nếu giỏ hàng trống → quay lại trang giỏ hàng
             request.setAttribute("errorMessage", "Giỏ hàng của bạn đang trống. Vui lòng thêm sản phẩm trước khi thanh toán!");
             request.getRequestDispatcher("/Customer/cart.jsp").forward(request, response);
             return;
         }
 
-        // ✅ Lấy danh sách ID sản phẩm được chọn từ form (VD: "12,15,18")
+        // ✅ Lấy danh sách sản phẩm được chọn từ checkbox trong form (VD: "12,15,18")
         String selectedParam = request.getParameter("selectedItems");
         List<CartItem> selectedItems = new ArrayList<>();
 
@@ -69,7 +79,7 @@ public class CheckoutServlet extends HttpServlet {
             }
         }
 
-        // ⚙️ Nếu không chọn gì thì báo lỗi
+        // ⚠️ Nếu không có sản phẩm nào được chọn → quay lại giỏ hàng
         if (selectedItems.isEmpty()) {
             request.setAttribute("errorMessage", "Vui lòng chọn ít nhất một sản phẩm để thanh toán!");
             request.getRequestDispatcher("/Customer/cart.jsp").forward(request, response);
@@ -80,11 +90,15 @@ public class CheckoutServlet extends HttpServlet {
         Cart selectedCart = new Cart();
         selectedCart.setItems(selectedItems);
 
-        // Lưu vào session (để sử dụng trong bước thanh toán)
+        // Lưu vào session để dùng ở bước thanh toán (và callback VNPay)
         session.setAttribute("selectedCart", selectedCart);
 
-        // Chuyển sang trang checkout.jsp
+        // ✅ Gửi thông tin khách hàng sang JSP
         request.setAttribute("cart", selectedCart);
+        request.setAttribute("customer", customer);
+        request.setAttribute("defaultAddress", defaultAddress);
+
+        // 👉 Chuyển đến trang checkout.jsp
         request.getRequestDispatcher("/Customer/checkout.jsp").forward(request, response);
     }
 

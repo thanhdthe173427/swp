@@ -77,6 +77,25 @@ public class CustomerDAO {
         return null;
     }
 
+    /** ✅ DÙNG CHO CHECKOUT: Lấy khách hàng theo userId */
+    public User getCustomerByUserId(long userId) {
+        String sql = "SELECT id, email, phone, full_name, dob, role, status, created_at, updated_at "
+                   + "FROM users WHERE id = ? AND role = 'customer'";
+        try (Connection conn = db.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setLong(1, userId);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return extractUser(rs);
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("❌ Error in getCustomerByUserId(): " + e.getMessage());
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     /** ✅ Cập nhật thông tin khách hàng */
     public void updateCustomer(User user) {
         String sql = "UPDATE users "
@@ -127,26 +146,15 @@ public class CustomerDAO {
     public List<User> searchCustomersByNameAndStatus(String name, String status) {
         List<User> list = new ArrayList<>();
 
-        // Chuẩn hóa input
         name = (name == null) ? "" : name.trim();
         status = (status == null || status.trim().isEmpty()) ? "all" : status.trim().toLowerCase();
 
-        // Debug log
-        System.out.println("=== SEARCH DEBUG ===");
-        System.out.println("Search name: [" + name + "] (length: " + name.length() + ")");
-        System.out.println("Status filter: [" + status + "]");
-
-        // Base query
         StringBuilder sql = new StringBuilder("SELECT id, email, phone, full_name, dob, role, status, created_at, updated_at "
                                             + "FROM users WHERE role = 'customer'");
 
         boolean hasNameFilter = !name.isEmpty();
         boolean hasStatusFilter = !"all".equalsIgnoreCase(status);
 
-        System.out.println("Has name filter: " + hasNameFilter);
-        System.out.println("Has status filter: " + hasStatusFilter);
-
-        // Thêm điều kiện lọc
         if (hasNameFilter) {
             sql.append(" AND full_name LIKE ?");
         }
@@ -156,34 +164,22 @@ public class CustomerDAO {
 
         sql.append(" ORDER BY id DESC");
 
-        System.out.println("SQL Query: " + sql.toString());
-
         try (Connection conn = db.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql.toString())) {
 
             int paramIndex = 1;
-
             if (hasNameFilter) {
-                String searchParam = "%" + name + "%";
-                ps.setString(paramIndex++, searchParam);
-                System.out.println("Param " + (paramIndex - 1) + ": " + searchParam);
+                ps.setString(paramIndex++, "%" + name + "%");
             }
-
             if (hasStatusFilter) {
                 ps.setString(paramIndex++, status);
-                System.out.println("Param " + (paramIndex - 1) + ": " + status);
             }
 
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
-                    User user = extractUser(rs);
-                    list.add(user);
-                    System.out.println("  - Found: " + user.getFullName() + " (" + user.getStatus() + ")");
+                    list.add(extractUser(rs));
                 }
             }
-
-            System.out.println("Total found: " + list.size() + " customers");
-            System.out.println("===================");
 
         } catch (SQLException e) {
             System.err.println("❌ Error in searchCustomersByNameAndStatus(): " + e.getMessage());

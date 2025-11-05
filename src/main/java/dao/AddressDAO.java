@@ -6,23 +6,26 @@ import java.util.*;
 
 public class AddressDAO {
 
-    private Connection conn;
+    private final DBContext db;
 
-    public AddressDAO(Connection conn) {
-        this.conn = conn;
+    public AddressDAO() {
+        db = new DBContext();
     }
 
-    // ✅ Hàm lấy địa chỉ mặc định của user (trả về 1 Address)
+    /** ✅ Lấy địa chỉ mặc định của user (nếu không có thì lấy địa chỉ đầu tiên) */
     public Address getDefaultAddressByUserId(long userId) {
         Address address = null;
         String sql = "SELECT * FROM addresses WHERE user_id = ? AND is_default = TRUE LIMIT 1";
 
-        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (Connection conn = db.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
             ps.setLong(1, userId);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
                 address = extractAddressFromResultSet(rs);
             }
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -30,7 +33,9 @@ public class AddressDAO {
         // Nếu user chưa có địa chỉ mặc định → lấy địa chỉ đầu tiên
         if (address == null) {
             String fallbackSql = "SELECT * FROM addresses WHERE user_id = ? LIMIT 1";
-            try (PreparedStatement ps2 = conn.prepareStatement(fallbackSql)) {
+            try (Connection conn = db.getConnection();
+                 PreparedStatement ps2 = conn.prepareStatement(fallbackSql)) {
+
                 ps2.setLong(1, userId);
                 ResultSet rs2 = ps2.executeQuery();
                 if (rs2.next()) {
@@ -44,30 +49,36 @@ public class AddressDAO {
         return address;
     }
 
-    // ✅ Hàm chỉ lấy chuỗi địa chỉ (dành cho hiển thị nhanh)
+    /** ✅ Chỉ lấy chuỗi địa chỉ đầy đủ (dành cho hiển thị nhanh) */
     public String getFullAddressByUserId(long userId) {
         String fullAddress = null;
         String sql = "SELECT full_address FROM addresses WHERE user_id = ? AND is_default = TRUE LIMIT 1";
 
-        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (Connection conn = db.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
             ps.setLong(1, userId);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
                 fullAddress = rs.getString("full_address");
             }
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
-        // Nếu không có địa chỉ mặc định → lấy bất kỳ địa chỉ nào
+        // Nếu không có địa chỉ mặc định → lấy địa chỉ đầu tiên
         if (fullAddress == null) {
             String fallbackSql = "SELECT full_address FROM addresses WHERE user_id = ? LIMIT 1";
-            try (PreparedStatement ps2 = conn.prepareStatement(fallbackSql)) {
+            try (Connection conn = db.getConnection();
+                 PreparedStatement ps2 = conn.prepareStatement(fallbackSql)) {
+
                 ps2.setLong(1, userId);
                 ResultSet rs2 = ps2.executeQuery();
                 if (rs2.next()) {
                     fullAddress = rs2.getString("full_address");
                 }
+
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -76,48 +87,61 @@ public class AddressDAO {
         return fullAddress;
     }
 
-    // ✅ Lấy danh sách tất cả địa chỉ của 1 user
+    /** ✅ Lấy danh sách tất cả địa chỉ của 1 user */
     public List<Address> getAddressesByUserId(long userId) {
         List<Address> list = new ArrayList<>();
         String sql = "SELECT * FROM addresses WHERE user_id = ?";
-        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+
+        try (Connection conn = db.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
             ps.setLong(1, userId);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 list.add(extractAddressFromResultSet(rs));
             }
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return list;
     }
 
-    // ✅ Lấy 1 địa chỉ theo ID
+    /** ✅ Lấy 1 địa chỉ theo ID */
     public Address getAddressById(long id) {
         Address a = null;
         String sql = "SELECT * FROM addresses WHERE id = ?";
-        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+
+        try (Connection conn = db.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
             ps.setLong(1, id);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
                 a = extractAddressFromResultSet(rs);
             }
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
         return a;
     }
 
-    // ✅ Cập nhật địa chỉ
+    /** ✅ Cập nhật địa chỉ */
     public void updateAddress(Address a) {
         String sql = "UPDATE addresses SET full_address=?, recipient_name=?, phone=?, is_default=?, updated_at=NOW() WHERE id=?";
-        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+
+        try (Connection conn = db.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
             ps.setString(1, a.getFullAddress());
             ps.setString(2, a.getRecipientName());
             ps.setString(3, a.getPhone());
             ps.setBoolean(4, a.isDefault());
             ps.setLong(5, a.getId());
             ps.executeUpdate();
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
