@@ -55,15 +55,135 @@ public class ProductDAO {
         return list;
     }
 
+    public void delete(long id) {
+        String sql = "DELETE FROM products WHERE id=?";
+        try {
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setLong(1, id);
+            ps.executeUpdate();
+            ps.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public Product getById(long id) {
+        String sql = "SELECT * FROM products WHERE id=?";
+        try {
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setLong(1, id);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                Product p = new Product();
+                p.setId(rs.getLong("id"));
+                p.setCategoryId(rs.getLong("category_id"));
+                p.setSku(rs.getString("sku"));
+                p.setSlug(rs.getString("slug"));
+                p.setName(rs.getString("name"));
+                p.setDescription(rs.getString("description"));
+                p.setBasePrice(rs.getBigDecimal("base_price"));
+                p.setCostPrice(rs.getBigDecimal("cost_price"));
+                p.setUnit(rs.getString("unit"));
+                p.setIsActive(rs.getBoolean("is_active"));
+                p.setIsAccessory(rs.getBoolean("is_accessory"));
+                p.setCreatedAt(rs.getTimestamp("created_at"));
+                p.setUpdatedAt(rs.getTimestamp("updated_at"));
+                return p;
+            }
+            rs.close();
+            ps.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public void update(Product p) {
+        String sql = "UPDATE products SET category_id=?, sku=?, slug=?, name=?, description=?, base_price=?, cost_price=?, unit=?, is_active=?, is_accessory=?, updated_at=? WHERE id=?";
+        try {
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setLong(1, p.getCategoryId());
+            ps.setString(2, p.getSku());
+            ps.setString(3, p.getSlug());
+            ps.setString(4, p.getName());
+            ps.setString(5, p.getDescription());
+            ps.setBigDecimal(6, p.getBasePrice());
+            ps.setBigDecimal(7, p.getCostPrice());
+            ps.setString(8, p.getUnit());
+            ps.setBoolean(9, p.isIsActive());
+            ps.setBoolean(10, p.isIsAccessory());
+            ps.setTimestamp(11, new Timestamp(System.currentTimeMillis())); // updated_at
+            ps.setLong(12, p.getId());
+            ps.executeUpdate();
+            ps.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public List<Product> getAll() {
+        List<Product> list = new ArrayList<>();
+        String sql = "SELECT * FROM products";
+        try {
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Product p = new Product();
+                p.setId(rs.getLong("id"));
+                p.setCategoryId(rs.getLong("category_id"));
+                p.setSku(rs.getString("sku"));
+                p.setSlug(rs.getString("slug"));
+                p.setName(rs.getString("name"));
+                p.setDescription(rs.getString("description"));
+                p.setBasePrice(rs.getBigDecimal("base_price"));
+                p.setCostPrice(rs.getBigDecimal("cost_price"));
+                p.setUnit(rs.getString("unit"));
+                p.setIsActive(rs.getBoolean("is_active"));
+                p.setIsAccessory(rs.getBoolean("is_accessory"));
+                p.setCreatedAt(rs.getTimestamp("created_at"));
+                p.setUpdatedAt(rs.getTimestamp("updated_at"));
+                list.add(p);
+            }
+            rs.close();
+            ps.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    public void add(Product p) {
+        String sql = "INSERT INTO products(category_id, sku, slug, name, description, base_price, cost_price, unit, is_active, is_accessory, created_at, updated_at) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
+        try {
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setLong(1, p.getCategoryId());
+            ps.setString(2, p.getSku());
+            ps.setString(3, p.getSlug());
+            ps.setString(4, p.getName());
+            ps.setString(5, p.getDescription());
+            ps.setBigDecimal(6, p.getBasePrice());
+            ps.setBigDecimal(7, p.getCostPrice());
+            ps.setString(8, p.getUnit());
+            ps.setBoolean(9, p.isIsActive());
+            ps.setBoolean(10, p.isIsAccessory());
+            ps.setTimestamp(11, new Timestamp(System.currentTimeMillis())); // created_at
+            ps.setTimestamp(12, new Timestamp(System.currentTimeMillis())); // updated_at
+            ps.executeUpdate();
+            ps.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     // ✅ Lấy sản phẩm theo slug của danh mục
     public List<Product> getProductsByCategorySlug(String slug) {
         List<Product> list = new ArrayList<>();
-        String sql =
-            "SELECT p.* " +
-            "FROM products p " +
-            "JOIN categories c ON p.category_id = c.id " +
-            "WHERE p.is_active = 1 AND c.slug = ? " +
-            "ORDER BY p.created_at DESC";
+        String sql
+                = "SELECT p.* "
+                + "FROM products p "
+                + "JOIN categories c ON p.category_id = c.id "
+                + "WHERE p.is_active = 1 AND c.slug = ? "
+                + "ORDER BY p.created_at DESC";
 
         try {
             conn = new DBContext().getConnection();
@@ -110,16 +230,16 @@ public class ProductDAO {
     public List<Product> getProductsByOccasion(String occasion) {
         List<Product> list = new ArrayList<>();
 
-        String sql =
-            "SELECT * FROM products " +
-            "WHERE is_active = 1 " +
-            "  AND ( " +
-            "        LOWER(COALESCE(occasion, '')) LIKE ? " +
-            "     OR LOWER(COALESCE(tags, '')) LIKE ? " +
-            "     OR LOWER(COALESCE(name, '')) LIKE ? " +
-            "     OR LOWER(COALESCE(description, '')) LIKE ? " +
-            "      ) " +
-            "ORDER BY created_at DESC";
+        String sql
+                = "SELECT * FROM products "
+                + "WHERE is_active = 1 "
+                + "  AND ( "
+                + "        LOWER(COALESCE(occasion, '')) LIKE ? "
+                + "     OR LOWER(COALESCE(tags, '')) LIKE ? "
+                + "     OR LOWER(COALESCE(name, '')) LIKE ? "
+                + "     OR LOWER(COALESCE(description, '')) LIKE ? "
+                + "      ) "
+                + "ORDER BY created_at DESC";
 
         try {
             conn = new DBContext().getConnection();
@@ -168,9 +288,15 @@ public class ProductDAO {
     // ✅ Đóng kết nối an toàn
     private void closeConnection() {
         try {
-            if (rs != null) rs.close();
-            if (ps != null) ps.close();
-            if (conn != null) conn.close();
+            if (rs != null) {
+                rs.close();
+            }
+            if (ps != null) {
+                ps.close();
+            }
+            if (conn != null) {
+                conn.close();
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -188,6 +314,5 @@ public class ProductDAO {
         Product list = dao.getProductById(7);
         System.out.println("🎂 Hoa sinh nhật: " + list.getName());
 
-        
     }
 }

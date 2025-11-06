@@ -4,15 +4,21 @@ import model.WishlistItem;
 import java.sql.*;
 import java.util.*;
 
-public class WishlistDao extends DBContext {
+public class WishlistDAO {
 
-    /** ✅ Lấy danh sách sản phẩm yêu thích của user */
+    private Connection conn;
+    private PreparedStatement ps;
+    private ResultSet rs;
+
+    /**
+     * ✅ Lấy danh sách sản phẩm yêu thích của user
+     */
     public List<WishlistItem> getWishlistByUser(long userId) {
+        conn = new DBContext().getConnection();
         List<WishlistItem> list = new ArrayList<>();
         String sql = "SELECT * FROM wishlist WHERE user_id = ? ORDER BY added_at DESC";
 
-        try (Connection conn = getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setLong(1, userId);
             ResultSet rs = ps.executeQuery();
@@ -33,11 +39,13 @@ public class WishlistDao extends DBContext {
         return list;
     }
 
-    /** ✅ Thêm sản phẩm vào wishlist */
+    /**
+     * ✅ Thêm sản phẩm vào wishlist
+     */
     public void addToWishlist(long userId, long productId) {
+        conn = new DBContext().getConnection();
         String sql = "INSERT INTO wishlist (user_id, product_id, added_at) VALUES (?, ?, NOW())";
-        try (Connection conn = getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setLong(1, userId);
             ps.setLong(2, productId);
@@ -48,11 +56,13 @@ public class WishlistDao extends DBContext {
         }
     }
 
-    /** ✅ Xóa sản phẩm khỏi wishlist */
+    /**
+     * ✅ Xóa sản phẩm khỏi wishlist
+     */
     public void removeFromWishlist(long userId, long productId) {
+        conn = new DBContext().getConnection();
         String sql = "DELETE FROM wishlist WHERE user_id = ? AND product_id = ?";
-        try (Connection conn = getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setLong(1, userId);
             ps.setLong(2, productId);
@@ -63,16 +73,21 @@ public class WishlistDao extends DBContext {
         }
     }
 
-    /** ✅ Kiểm tra sản phẩm đã có trong wishlist chưa */
+    /**
+     * ✅ Kiểm tra sản phẩm đã có trong wishlist chưa
+     */
     public boolean isInWishlist(long userId, long productId) {
+        conn = new DBContext().getConnection();
         String sql = "SELECT COUNT(*) FROM wishlist WHERE user_id = ? AND product_id = ?";
-        try (Connection conn = getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (
+                PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setLong(1, userId);
             ps.setLong(2, productId);
             ResultSet rs = ps.executeQuery();
-            if (rs.next()) return rs.getInt(1) > 0;
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
+            }
 
         } catch (SQLException e) {
             e.printStackTrace();

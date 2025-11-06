@@ -4,7 +4,8 @@ import java.util.Date;
 
 public class Batch {
     private long id;
-    private long productId;
+    private Long productId;
+    private Long materialId;
     private Long warehouseId;
     private Long supplierInvoiceId;
     private String batchCode;
@@ -12,13 +13,45 @@ public class Batch {
     private Date expiryDate;
     private int qtyOnHand;
     private int qtyReserved;
+    private String materialName;
+    private Long supplierId;
+    
+    private String supplierName;
+
+    public void setSupplierName(String supplierName) {
+        this.supplierName = supplierName;
+    }
+
+    public String getSupplierName() {
+        return supplierName;
+    }
+
+    public void setSupplierId(Long supplierId) {
+        this.supplierId = supplierId;
+    }
+
+    public Long getSupplierId() {
+        return supplierId;
+    }
+
+    public void setMaterialId(Long materialId) {
+        this.materialId = materialId;
+    }
+
+    public void setMaterialName(String materialName) {
+        this.materialName = materialName;
+    }
+
+    public String getMaterialName() {
+        return materialName;
+    }
 
     // Getters & Setters
 
     public Batch() {
     }
 
-    public Batch(long id, long productId, Long warehouseId, Long supplierInvoiceId, String batchCode, Date mfgDate, Date expiryDate, int qtyOnHand, int qtyReserved) {
+    public Batch(long id, Long productId, Long materialId, Long warehouseId, Long supplierInvoiceId, String batchCode, Date mfgDate, Date expiryDate, int qtyOnHand, int qtyReserved) {
         this.id = id;
         this.productId = productId;
         this.warehouseId = warehouseId;
@@ -30,16 +63,24 @@ public class Batch {
         this.qtyReserved = qtyReserved;
     }
 
+    public Long getMaterialId() {
+        return materialId;
+    }
+
     
     public long getId() {
         return id;
+    }
+
+    public void setMaterialId(long materialId) {
+        this.materialId = materialId;
     }
 
     public void setId(long id) {
         this.id = id;
     }
 
-    public long getProductId() {
+    public Long getProductId() {
         return productId;
     }
 

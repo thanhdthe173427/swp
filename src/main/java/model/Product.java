@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 public class Product {
+
     private long id;
     private Long categoryId;
     private String sku;
@@ -18,14 +19,14 @@ public class Product {
     private Date createdAt;
     private Date updatedAt;
     private String url; // ✅ thêm mới
+    private int totalQty;
+    private int totalBatches;
+    private String warehouses;
 
     public Product() {
     }
 
-    // ✅ Constructor đầy đủ (có thêm url)
-    public Product(long id, Long categoryId, String sku, String slug, String name, String description,
-                   BigDecimal basePrice, BigDecimal costPrice, String unit, boolean isActive,
-                   boolean isAccessory, Date createdAt, Date updatedAt, String url) {
+    public Product(long id, Long categoryId, String sku, String slug, String name, String description, BigDecimal basePrice, BigDecimal costPrice, String unit, boolean isActive, boolean isAccessory, Date createdAt, Date updatedAt, String url, int totalQty, int totalBatches, String warehouses) {
         this.id = id;
         this.categoryId = categoryId;
         this.sku = sku;
@@ -40,17 +41,10 @@ public class Product {
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
         this.url = url;
+        this.totalQty = totalQty;
+        this.totalBatches = totalBatches;
+        this.warehouses = warehouses;
     }
-
-    // ✅ Constructor cũ (vẫn giữ để tương thích)
-    public Product(long id, Long categoryId, String sku, String slug, String name, String description,
-                   BigDecimal basePrice, BigDecimal costPrice, String unit, boolean isActive,
-                   boolean isAccessory, Date createdAt, Date updatedAt) {
-        this(id, categoryId, sku, slug, name, description, basePrice, costPrice, unit,
-             isActive, isAccessory, createdAt, updatedAt, null);
-    }
-
-    // =================== GETTER & SETTER ===================
 
     public long getId() {
         return id;
@@ -156,7 +150,6 @@ public class Product {
         this.updatedAt = updatedAt;
     }
 
-    // ✅ Getter & Setter cho URL
     public String getUrl() {
         return url;
     }
@@ -164,4 +157,29 @@ public class Product {
     public void setUrl(String url) {
         this.url = url;
     }
+
+    public int getTotalQty() {
+        return totalQty;
+    }
+
+    public void setTotalQty(int totalQty) {
+        this.totalQty = totalQty;
+    }
+
+    public int getTotalBatches() {
+        return totalBatches;
+    }
+
+    public void setTotalBatches(int totalBatches) {
+        this.totalBatches = totalBatches;
+    }
+
+    public String getWarehouses() {
+        return warehouses;
+    }
+
+    public void setWarehouses(String warehouses) {
+        this.warehouses = warehouses;
+    }
+    
 }

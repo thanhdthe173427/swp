@@ -1,6 +1,6 @@
 package controller.customer;
 
-import dao.WishlistDao;
+import dao.WishlistDAO;
 import dao.ProductDAO;
 import model.*;
 import jakarta.servlet.*;
@@ -12,7 +12,7 @@ import java.util.List;
 
 @WebServlet("/Wishlist")
 public class WishlistServlet extends HttpServlet {
-    private WishlistDao wishlistDao = new WishlistDao();
+    private WishlistDAO wishlistDao = new WishlistDAO();
     private ProductDAO productDao = new ProductDAO();
 
     @Override

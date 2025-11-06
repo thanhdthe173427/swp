@@ -132,4 +132,8 @@ public class OrderItemDao {
             System.out.println(i.getProductName() + " - " + i.getTotalPrice());
         }
     }
+
+    int getSoldQuantityByBatchId(long id) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
 }

@@ -11,6 +11,16 @@ public class Material {
     private BigDecimal costPrice;
     private Date createdAt;
     private Date updatedAt;
+    private Integer quantity;
+
+    public Integer getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(Integer quantity) {
+        this.quantity = quantity;
+    }
+    
 
     public Material() {
     }
