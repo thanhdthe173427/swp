@@ -44,7 +44,38 @@ public class BatchDAO {
         }
         return list;
     }
+    public static void main(String[] args) {
+        BatchDAO ba = new BatchDAO();
+        
+        System.out.println("Đang lấy danh sách tất cả lô hàng (Batches)...");
+        
+        // 1. Gọi hàm getAll()
+        List<Batch> allBatches = ba.getAll();
 
+        // 2. Kiểm tra xem danh sách có rỗng không
+        if (allBatches == null || allBatches.isEmpty()) {
+            System.out.println("Không tìm thấy lô hàng nào trong cơ sở dữ liệu.");
+            return; // Dừng chương trình
+        }
+
+        System.out.println("--- BẮT ĐẦU DANH SÁCH LÔ HÀNG ---");
+        
+        // 3. Lặp qua danh sách và in thông tin chi tiết
+        for (Batch b : allBatches) {
+            System.out.println(
+                "ID: " + b.getId() + " | " +
+                "Mã Lô: " + b.getBatchCode() + " | " +
+                "Material ID: " + b.getMaterialId() + " | " +
+                "Warehouse ID: " + b.getWarehouseId() + " | " +
+                "Ngày SX: " + b.getMfgDate() + " | " +
+                "SL Nhập (QtyReserved): " + b.getQtyReserved() + " | " +
+                "==> SL Tồn (QtyOnHand): " + b.getQtyOnHand() // Đây là số lượng đã được tính toán
+            );
+        }
+        
+        System.out.println("--- KẾT THÚC DANH SÁCH ---");
+        System.out.println("Tổng cộng tìm thấy: " + allBatches.size() + " lô hàng.");
+    }
     // Lấy batch theo ID
     public Batch getById(long id) {
         String sql = "SELECT * FROM batches WHERE id=?";

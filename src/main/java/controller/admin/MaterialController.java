@@ -77,17 +77,13 @@ public class MaterialController extends HttpServlet {
 
         String search = request.getParameter("search");
         List<Material> materials;
-        try {
-            if (search != null && !search.trim().isEmpty()) {
-                materials = materialDAO.search(search);
-                request.setAttribute("search", search);
-            } else {
-                materials = materialDAO.getAll();
-            }
-            request.setAttribute("materials", materials);
-            request.getRequestDispatcher("admin/materials.jsp").forward(request, response);
-        } catch (SQLException e) {
-            e.printStackTrace();
+        if (search != null && !search.trim().isEmpty()) {
+            materials = materialDAO.search(search);
+            request.setAttribute("search", search);
+        } else {
+            materials = materialDAO.getAll();
         }
+        request.setAttribute("materials", materials);
+        request.getRequestDispatcher("admin/materials.jsp").forward(request, response);
     }
 }

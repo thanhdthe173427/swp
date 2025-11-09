@@ -50,36 +50,27 @@ public class AdminBatchController extends HttpServlet {
 
     // Giữ nguyên tên biến "products"
     List<Material> products = new ArrayList<>();
-    try {
-        products = materialDAO.getAll();
-    } catch (SQLException ex) {
-        Logger.getLogger(AdminBatchController.class.getName()).log(Level.SEVERE, null, ex);
-    }
+    products = materialDAO.getAll();
 
     // Lấy danh sách warehouse và supplier
     List<Warehouse> warehouses = warehouseDAO.getAll();
     List<Supplier> suppliers = supplierDAO.getAll();
 
     // Gán tên nguyên liệu và tên nhà cung cấp cho từng batch
-    for (Batch b : batches) {
-        try {
-            if (b.getMaterialId() != 0) {
-                Material m = materialDAO.getById(b.getMaterialId());
-                if (m != null) b.setMaterialName(m.getName());
-            }
-
-            if (b.getSupplierId() != 0) {
-                for (Supplier s : suppliers) {
-                    if (s.getId() == b.getSupplierId()) {
-                        b.setSupplierName(s.getName());
-                        break;
-                    }
-                }
-            }
-        } catch (SQLException ex) {
-            Logger.getLogger(AdminBatchController.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
+//    for (Batch b : batches) {
+//        if (b.getMaterialId() != 0) {
+//            Material m = materialDAO.getById(b.getMaterialId());
+//            if (m != null) b.setMaterialName(m.getName());
+//        }
+//        if (b.getSupplierId() != 0) {
+//            for (Supplier s : suppliers) {
+//                if (s.getId() == b.getSupplierId()) {
+//                    b.setSupplierName(s.getName());
+//                    break;
+//                }
+//            }
+//        }
+//    }
 
     // Gửi dữ liệu sang JSP
     request.setAttribute("batches", batches);

@@ -10,7 +10,32 @@ public class OrderItemDao {
     private Connection conn;
     private PreparedStatement ps;
     private ResultSet rs;
+// Đặt phương thức này vào trong file: OrderItemDao.java
 
+public int getSoldQuantityByBatchId(long batchId) {
+    String sql = "SELECT SUM(quantity) AS total_sold  FROM order_items WHERE batch_id = ?";
+    int totalSold = 0;
+
+    // Giả sử bạn dùng DBContext giống như các DAO khác
+    // và không dùng biến instance (cấp class) cho connection
+    try (Connection conn = new DBContext().getConnection();
+         PreparedStatement ps = conn.prepareStatement(sql)) {
+
+        ps.setLong(1, batchId);
+
+        try (ResultSet rs = ps.executeQuery()) {
+            if (rs.next()) {
+                // Nếu không có bản ghi nào (SUM trả về NULL),
+                // rs.getInt() sẽ tự động trả về 0.
+                totalSold = rs.getInt("total_sold");
+            }
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+        // Có lỗi xảy ra, tạm thời coi như bán được 0
+    }
+    return totalSold;
+}
     // ✅ Lấy tất cả item theo Order ID
     public List<OrderItem> getItemsByOrderId(long orderId) {
         List<OrderItem> list = new ArrayList<>();
@@ -133,7 +158,4 @@ public class OrderItemDao {
         }
     }
 
-    int getSoldQuantityByBatchId(long id) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
 }

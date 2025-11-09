@@ -64,8 +64,6 @@ public class InventoryController extends HttpServlet {
 
         } catch (NumberFormatException e) {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid warehouse id format");
-        } catch (SQLException ex) {
-            Logger.getLogger(InventoryController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
